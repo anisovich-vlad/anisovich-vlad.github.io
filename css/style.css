@@ -49,18 +49,6 @@ a {
 .col-4 { width: 33.333%; }
 .col-3 { width: 25%; }
 
-@media (max-width: 992px) {
-    .col-md-12 { width: 100%; }
-    .col-md-6 { width: 50%; }
-}
-
-@media (max-width: 576px) {
-    .polaroid-blod { flex-direction: column; }
-    .hero-avatar .blog-img { width: 100%; }
-    .col-sm-12 { width: 100%; }
-    .col-sm-6 { width: 50%; }
-}
-
 /* ===== УНИВЕРСАЛЬНЫЕ КОМПОНЕНТЫ ===== */
 .card {
     background: white;
@@ -285,7 +273,7 @@ a {
     .polaroid-blod { 
         flex-direction: column; 
     }
-    .hero-avatar .blog-img {
+    .hero-avatar, .blog-img {
         width: 100%;
     }
     .navbar .container {
@@ -344,17 +332,6 @@ a {
 .hero-content p {
     max-width: 600px;
     color: #475569;
-}
-
-@media (max-width: 768px) {
-    .hero-card {
-        flex-direction: column;
-        text-align: center;
-        padding: 30px;
-    }
-    .hero-content h1 {
-        font-size: 2rem;
-    }
 }
 
 /* ===== ИКОНКИ ДЛЯ КАРТОЧЕК ===== */
@@ -450,11 +427,35 @@ textarea.form-control {
 
 /* Адаптивность для мобильных: чуть уменьшим высоту, если нужно */
 @media (max-width: 768px) {
+    .blog { 
+        flex-direction: column; 
+    }
+    .hero-avatar, .blog-img { 
+        width: 100%; 
+    }
+    .hero-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px;
+    }
+    .hero-content h1 {
+        font-size: 2rem;
+    }
     .google-form-container iframe {
         height: 750px; /* На мобильных форма может быть выше из-за переносов, можно увеличить */
     }
 }
+@media (max-width: 992px) {
+    .col-md-12 { width: 100%; }
+    .col-md-6 { width: 50%; }
+}
 
+@media (max-width: 576px) {
+    .blog { flex-direction: column; }
+    .hero-avatar, .blog-img { width: 100%; }
+    .col-sm-12 { width: 100%; }
+    .col-sm-6 { width: 50%; }
+}
 .success-message {
     background-color: #d4edda;
     color: #155724;
