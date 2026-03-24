@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты | Анисович В.Д.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="container">
+        <a href="index.html" class="logo">Влад<span>Анисович</span></a>
+        <ul class="nav-menu">
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="method.html">Методичка</a></li>
+            <li><a href="students.html">Учащимся</a></li>
+            <li><a href="parents.html">Родителям</a></li>
+            <li><a href="blog.html">Блог</a></li>
+            <li><a href="contact.html" class="active">Контакты</a></li>
+        </ul>
+    </div>
+</header>
+
+<main>
+    <div class="container py-5">
+        <h1 class="section-title" style="margin-bottom: 2rem;">Обратная связь</h1>
+
+        <div class="row">
+            <!-- КОЛОНКА С ФОРМОЙ -->
+            <div class="col-6 col-md-12">
+                <div class="card">
+                    <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
+                        <i class="fas fa-envelope-open-text" style="font-size: 2.5rem; color: #2d5a9b;"></i>
+                        <div>
+                            <h2 style="margin-bottom: 5px;">Напишите мне</h2>
+                            <p>Я обязательно отвечу в ближайшее время.</p>
+                        </div>
+                    </div>
+
+                    <!-- БЛОК УСПЕШНОЙ ОТПРАВКИ -->
+                    <div id="successMessage" class="success-message">
+                        <i class="fas fa-check-circle" style="margin-right: 8px;"></i>
+                        Спасибо! Ваше сообщение отправлено.
+                    </div>
+
+                    <!-- НАША НОВАЯ ФОРМА -->
+                    <form id="contactForm" target="hidden_iframe" method="POST" action="https://docs.google.com/forms/d/e/1FAIpQLSckRs0mh-UxEYMqmrefqMmbTG_WbfOBEQJ4tGBDbuoxMt43lQ/formResponse">
+                        <!-- Поле Имя -->
+                        <div class="form-group">
+                            <input type="text" 
+                                   class="form-control" 
+                                   name="entry.1019333934"  
+                                   placeholder="Как вас зовут?" 
+                                   required>
+                        </div>
+
+                        <!-- Поле Email -->
+                        <div class="form-group">
+                            <input type="email" 
+                                   class="form-control" 
+                                   name="entry.451041304" 
+                                   placeholder="E-mail для ответа" 
+                                   required>
+                        </div>
+
+                        <!-- Поле Сообщение -->
+                        <div class="form-group">
+                            <textarea class="form-control" 
+                                      name="entry.173741456" 
+                                      rows="5" 
+                                      placeholder="Ваше сообщение" 
+                                      required></textarea>
+                        </div>
+
+                        <!-- Скрытые поля, которые могут требоваться Google Forms (обычно необязательны) -->
+                        <!-- Если форма требует fvv или другие скрытые поля, добавьте их здесь -->
+
+                        <button type="submit" class="btn btn-primary">Отправить сообщение</button>
+                        <div class="form-footer">
+                            Ваши данные не будут переданы третьим лицам.
+                        </div>
+                    </form>
+
+                    <!-- Скрытый iframe для приёма ответа -->
+                    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+                </div>
+            </div>
+
+            <!-- КОЛОНКА С СОЦСЕТЯМИ (без изменений) -->
+            <div class="col-6 col-md-12">
+                <div class="card">
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="index.html" class="btn btn-outline">На главную</a>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-6 col-sm-12" style="margin-bottom: 20px;">
+                <p>© 2026 Анисович Владислав Дмитриевич<br>Персональный сайт учителя математики</p>
+            </div>
+            <div class="col-6 col-sm-12" style="text-align: right;">
+                <a href="#" style="margin: 0 10px;"><i class="fab fa-vk"></i></a>
+                <a href="#" style="margin: 0 10px;"><i class="fab fa-youtube"></i></a>
+                <a href="#" style="margin: 0 10px;"><i class="fab fa-telegram"></i></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.querySelectorAll('a[href="#"]').forEach(link => {
+        link.addEventListener('click', (e) => e.preventDefault());
+    });
+</script>
+
+<!-- СКРИПТ ОБРАБОТКИ ФОРМЫ -->
+<script>
+    document.querySelectorAll('a[href="#"]').forEach(link => {
+        link.addEventListener('click', (e) => e.preventDefault());
+    });
+
+    const form = document.getElementById('contactForm');
+    const iframe = document.getElementById('hidden_iframe');
+    const successMessage = document.getElementById('successMessage');
+
+    form.addEventListener('submit', function(e) {
+        // Не блокируем отправку полностью, даём форме отправиться в iframe
+        // но можем показать индикацию загрузки (по желанию)
+
+        // Покажем сообщение через небольшую задержку, 
+        // чтобы убедиться, что iframe загрузился
+        setTimeout(() => {
+            successMessage.classList.add('show');
+            form.reset(); // очищаем поля
+        }, 1000); // 1 секунда — достаточно для отправки
+
+        // Чтобы форма не пыталась перезагрузить страницу через обычный POST,
+        // мы уже используем target="hidden_iframe", этого достаточно.
+    });
+
+    // Дополнительно: можно скрыть сообщение при повторной отправке
+    form.addEventListener('focusin', function() {
+        successMessage.classList.remove('show');
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,480 @@
+/* ===== СБРОС И БАЗОВЫЕ НАСТРОЙКИ ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f9fafc;
+    color: #1e293b;
+    line-height: 1.5;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+a {
+    text-decoration: none;
+}
+/* ===== КОНТЕЙНЕРЫ И СЕТКА (как в Bootstrap, но свои) ===== */
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -12px;
+}
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+[class*="col-"] {
+    padding: 0 12px;
+    margin-bottom: 24px;
+}
+
+.col-12 { width: 100%; }
+.col-8 { width: 66.666% }
+.col-6 { width: 50%; }
+.col-4 { width: 33.333%; }
+.col-3 { width: 25%; }
+
+@media (max-width: 992px) {
+    .col-md-12 { width: 100%; }
+    .col-md-6 { width: 50%; }
+}
+
+@media (max-width: 576px) {
+    .col-sm-12 { width: 100%; }
+    .col-sm-6 { width: 50%; }
+}
+
+/* ===== УНИВЕРСАЛЬНЫЕ КОМПОНЕНТЫ ===== */
+.card {
+    background: white;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.02), 0 2px 6px rgba(0,20,50,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 30px rgba(0,40,80,0.1);
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #0f2b45;
+}
+
+.card-text {
+    color: #475569;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+/* Карточка-полароид для фотографий */
+
+.polaroid {
+    background: white;
+    padding: 10px 10px 15px 10px;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    border: 1px solid #eaeef5;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    border-radius: 10px;
+}
+
+.polaroid:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 20px rgba(0,40,80,0.15);
+}
+
+.polaroid-image {
+    width: 100%;
+    margin-bottom: 12px;
+    background: #f0f3f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.polaroid-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    aspect-ratio: 16/9;
+}
+
+.polaroid-caption {
+    font-weight: 500;
+    color: #1e293b;
+    text-align: center;
+    font-size: 0.95rem;
+    padding: 6px 6px;
+    line-height: 1.4;
+}
+.blog {
+    flex-direction: row; 
+    align-items: center; 
+    padding: 20px;
+    gap: 15px;
+}
+.blog-img {
+    width: 80%
+}
+.blog img {
+    border-radius: 10px;
+}
+.left-border {
+    border: none;
+    border-left: 8px solid gray;
+}
+.textmain {
+    font-size: 1.6rem;
+    font-weight: 900;
+    padding: 15px 0;
+}
+/* Кнопки */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 40px;
+    font-weight: 500;
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.btn-primary {
+    background-color: #2d5a9b;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #1e3f6b;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border-color: #cbd5e1;
+    color: #1e293b;
+}
+
+.btn-outline:hover {
+    border-color: #2d5a9b;
+    color: #2d5a9b;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 40px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    background-color: #e9eef4;
+    color: #2d5a9b;
+    margin-bottom: 16px;
+    width: fit-content;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+    position: relative;
+    color: #0b2136;
+}
+
+.section-title:after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background: #2d5a9b;
+    border-radius: 4px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-4 { margin-top: 2rem; }
+.mb-2 { margin-bottom: 1rem; }
+.py-5 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+
+/* ===== ШАПКА ===== */
+.navbar {
+    background-color: white;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+    background-color: rgba(255,255,255,0.9);
+}
+
+.navbar .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1e293b;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+}
+
+.logo span {
+    color: #2d5a9b;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: #334155;
+    font-weight: 500;
+    transition: color 0.2s;
+    font-size: 1rem;
+}
+
+.nav-menu a:hover,
+.nav-menu a.active {
+    color: #2d5a9b;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .navbar .container {
+        flex-direction: column;
+        gap: 16px;
+    }
+    .nav-menu {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+    }
+}
+
+/* ===== ГЛАВНЫЙ ЭКРАН (ВИЗИТКА) ===== */
+.hero {
+    padding: 60px 0 40px;
+    background: linear-gradient(135deg, #f1f5f9 0%, #ffffff 100%);
+}
+
+.hero-card {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    background: white;
+    border-radius: 40px;
+    padding: 40px;
+    box-shadow: 0 20px 40px -10px rgba(0,20,40,0.1);
+}
+
+.hero-avatar {
+    width: 25%;
+}
+.hero-avatar img {
+    border-radius: 20px;
+}
+.hero-content h1 {
+    font-size: 2.6rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #0b2136;
+}
+
+.hero-content .lead {
+    font-size: 1.2rem;
+    color: #2d5a9b;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.hero-content .school {
+    font-size: 1rem;
+    color: #475569;
+    margin-bottom: 20px;
+}
+
+.hero-content p {
+    max-width: 600px;
+    color: #475569;
+}
+
+@media (max-width: 768px) {
+    .hero-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px;
+    }
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+}
+
+/* ===== ИКОНКИ ДЛЯ КАРТОЧЕК ===== */
+.icon-feature {
+    font-size: 2rem;
+    color: #2d5a9b;
+    margin-bottom: 16px;
+}
+
+/* ===== ФОРМА ОБРАТНОЙ СВЯЗИ ===== */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid #e2e8f0;
+    border-radius: 40px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border 0.2s;
+    background: white;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #2d5a9b;
+    box-shadow: 0 0 0 3px rgba(45,90,155,0.1);
+}
+
+textarea.form-control {
+    border-radius: 24px;
+    resize: vertical;
+}
+
+/* ===== ПОДВАЛ ===== */
+.footer {
+    background: #0b2136;
+    color: #cbd5e1;
+    padding: 40px 0 20px;
+    margin-top: 60px;
+}
+
+.footer a {
+    color: #a5b4cb;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer a:hover {
+    color: white;
+}
+
+.footer .row {
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* ===== ДОПОЛНИТЕЛЬНО ===== */
+.list-unstyled {
+    list-style: none;
+    padding: 0;
+}
+
+.list-unstyled li {
+    margin-bottom: 10px;
+}
+
+.list-unstyled i {
+    width: 24px;
+    color: #2d5a9b;
+}
+
+/* Контейнер для формы Google */
+.google-form-container {
+    width: 100%;
+    max-width: 100%; /* Чтобы не вылезал за границы карточки */
+    margin: 0 auto;
+    border-radius: 20px; /* Немного скруглим, но можно оставить и как в карточке */
+    overflow: hidden; /* Чтобы скругление применялось и к iframe */
+    background: white; /* Фон, на всякий случай */
+}
+
+/* Сам iframe формы */
+.google-form-container iframe {
+    display: block;
+    width: 100%;
+    height: 700px; /* Подберите высоту под своё содержимое. Можно чуть больше, чтобы точно влезло */
+    border: none;
+    transition: height 0.3s ease; /* Плавность, если будем менять высоту */
+}
+
+/* Адаптивность для мобильных: чуть уменьшим высоту, если нужно */
+@media (max-width: 768px) {
+    .google-form-container iframe {
+        height: 750px; /* На мобильных форма может быть выше из-за переносов, можно увеличить */
+    }
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 40px;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    display: none;
+    text-align: center;
+}
+.success-message.show {
+    display: block;
+}
+.form-footer {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: #6c757d;
+    text-align: center;
+}
+.ar-16-9 {
+    aspect-ratio: 16/9;
+}
+.ar-9-16 {
+    aspect-ratio: 9/16;
+}
+.ar-4-3 {
+    aspect-ratio: 4/3;
+}
+.ar-3-4 {
+    aspect-ratio: 3/4;
+}

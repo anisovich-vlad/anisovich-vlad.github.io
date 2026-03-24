@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тесты по математике | Математика для школьников</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Тесты по математике</h1>
+            <p>Проверьте свои знания по разным темам</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="../index.html">Главная</a></li>
+                <li><a href="section1.html">Натуральные числа</a></li>
+                <li><a href="section2.html">Дроби</a></li>
+                <li><a href="section3.html">Геометрия</a></li>
+                <li><a href="section4.html">Текстовые задачи</a></li>
+                <li><a href="section5.html">Уравнения</a></li>
+                <li><a href="section6.html">Логика</a></li>
+                <li><a href="tests.html" class="active">Тесты</a></li>
+            </ul>
+            <button class="menu-toggle">☰</button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="section-content">
+            <section id="test-selection">
+                <h2>Выберите тест</h2>
+                <div class="test-cards">
+                    <div class="test-card" data-test="numbers">
+                        <h3>Натуральные числа</h3>
+                        <p>10 вопросов по теме натуральных чисел и арифметических действий</p>
+                        <button class="start-test">Начать тест</button>
+                    </div>
+                    <div class="test-card" data-test="fractions">
+                        <h3>Дроби</h3>
+                        <p>12 вопросов по обыкновенным дробям</p>
+                        <button class="start-test">Начать тест</button>
+                    </div>
+                    <div class="test-card" data-test="geometry">
+                        <h3>Геометрия</h3>
+                        <p>8 вопросов по основам геометрии</p>
+                        <button class="start-test">Начать тест</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="test-container" style="display: none;">
+                <h2 id="test-title">Тест: <span id="current-test-name"></span></h2>
+                <div class="test-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <span class="progress-text">Вопрос 1 из 10</span>
+                </div>
+                
+                <div class="question-container">
+                    <h3 class="question-text"></h3>
+                    <div class="answers-container"></div>
+                </div>
+                
+                <div class="test-navigation">
+                    <button id="prev-question" disabled>← Назад</button>
+                    <button id="next-question">Далее →</button>
+                    <button id="finish-test" style="display: none;">Завершить тест</button>
+                </div>
+            </section>
+
+            <section id="test-results" style="display: none;">
+                <h2>Результаты теста</h2>
+                <div class="result-card">
+                    <h3 id="result-title">Тест: Натуральные числа</h3>
+                    <div class="result-score">
+                        <div class="score-circle">
+                            <span id="score-percent">0</span>%
+                        </div>
+                        <p>Правильных ответов: <span id="correct-answers">0</span> из <span id="total-questions">0</span></p>
+                    </div>
+                    <div class="result-details">
+                        <h4>Ваши ошибки:</h4>
+                        <ul id="mistakes-list"></ul>
+                    </div>
+                    <button id="restart-test">Пройти тест ещё раз</button>
+                    <button id="choose-another">Выбрать другой тест</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2023 Математика для школьников</p>
+            <p>Раздел: Тесты</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Данные тестов
+        const testsData = {
+            numbers: {
+                title: "Натуральные числа",
+                questions: [
+                    {
+                        question: "Какое из этих чисел делится и на 3, и на 5?",
+                        answers: [
+                            { text: "25", correct: false },
+                            { text: "30", correct: true },
+                            { text: "42", correct: false },
+                            { text: "18", correct: false }
+                        ],
+                        explanation: "30 делится на 3 (30 ÷ 3 = 10) и на 5 (30 ÷ 5 = 6)"
+                    },
+                    {
+                        question: "Чему равен НОД чисел 48 и 72?",
+                        answers: [
+                            { text: "12", correct: false },
+                            { text: "24", correct: true },
+                            { text: "48", correct: false },
+                            { text: "8", correct: false }
+                        ],
+                        explanation: "48 = 2⁴ × 3, 72 = 2³ × 3². НОД = 2³ × 3 = 24"
+                    },
+                    {
+                        question: "Если число делится на 2 и на 3, то оно обязательно делится на:",
+                        answers: [
+                            { text: "4", correct: false },
+                            { text: "6", correct: true },
+                            { text: "9", correct: false },
+                            { text: "12", correct: false }
+                        ],
+                        explanation: "Если число делится на 2 и на 3, оно делится на их НОК, который равен 6"
+                    }
+                ]
+            },
+            fractions: {
+                title: "Дроби",
+                questions: [
+                    {
+                        question: "Какая из дробей больше: 3/4 или 5/8?",
+                        answers: [
+                            { text: "3/4", correct: true },
+                            { text: "5/8", correct: false },
+                            { text: "Они равны", correct: false }
+                        ],
+                        explanation: "Приведя к общему знаменателю: 3/4 = 6/8, что больше чем 5/8"
+                    },
+                    {
+                        question: "Чему равно значение выражения 1/2 + 1/3?",
+                        answers: [
+                            { text: "2/5", correct: false },
+                            { text: "5/6", correct: true },
+                            { text: "3/5", correct: false },
+                            { text: "1/6", correct: false }
+                        ],
+                        explanation: "1/2 + 1/3 = 3/6 + 2/6 = 5/6"
+                    },
+                    {
+                        question: "Как представить смешанное число 2 1/4 в виде неправильной дроби?",
+                        answers: [
+                            { text: "7/4", correct: false },
+                            { text: "9/4", correct: true },
+                            { text: "5/4", correct: false },
+                            { text: "8/4", correct: false }
+                        ],
+                        explanation: "2 1/4 = (2 × 4 + 1)/4 = 9/4"
+                    }
+                ]
+            },
+            geometry: {
+                title: "Геометрия",
+                questions: [
+                    {
+                        question: "Сколько градусов в развёрнутом угле?",
+                        answers: [
+                            { text: "90°", correct: false },
+                            { text: "180°", correct: true },
+                            { text: "270°", correct: false },
+                            { text: "360°", correct: false }
+                        ],
+                        explanation: "Развёрнутый угол — это прямая линия, которая составляет 180°"
+                    },
+                    {
+                        question: "Как называется треугольник с углами 40°, 70°, 70°?",
+                        answers: [
+                            { text: "Остроугольный", correct: true },
+                            { text: "Прямоугольный", correct: false },
+                            { text: "Тупоугольный", correct: false },
+                            { text: "Равносторонний", correct: false }
+                        ],
+                        explanation: "Все углы меньше 90° — остроугольный, и две стороны равны — равнобедренный"
+                    },
+                    {
+                        question: "Чему равна площадь прямоугольника со сторонами 5 см и 8 см?",
+                        answers: [
+                            { text: "13 см²", correct: false },
+                            { text: "26 см²", correct: false },
+                            { text: "40 см²", correct: true },
+                            { text: "80 см²", correct: false }
+                        ],
+                        explanation: "Площадь прямоугольника = длина × ширина = 5 × 8 = 40 см²"
+                    }
+                ]
+            }
+        };
+
+        // Переменные теста
+        let currentTest = null;
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let testResults = {};
+
+        // Элементы DOM
+        const testSelectionSection = document.getElementById('test-selection');
+        const testContainerSection = document.getElementById('test-container');
+        const testResultsSection = document.getElementById('test-results');
+        const testTitleElement = document.getElementById('current-test-name');
+        const questionTextElement = document.querySelector('.question-text');
+        const answersContainer = document.querySelector('.answers-container');
+        const prevButton = document.getElementById('prev-question');
+        const nextButton = document.getElementById('next-question');
+        const finishButton = document.getElementById('finish-test');
+        const progressText = document.querySelector('.progress-text');
+        const progressFill = document.querySelector('.progress-fill');
+        const resultTitleElement = document.getElementById('result-title');
+        const scorePercentElement = document.getElementById('score-percent');
+        const correctAnswersElement = document.getElementById('correct-answers');
+        const totalQuestionsElement = document.getElementById('total-questions');
+        const mistakesListElement = document.getElementById('mistakes-list');
+        const restartButton = document.getElementById('restart-test');
+        const chooseAnotherButton = document.getElementById('choose-another');
+
+        // Начало теста
+        document.querySelectorAll('.start-test').forEach(button => {
+            button.addEventListener('click', function() {
+                const testCard = this.closest('.test-card');
+                currentTest = testCard.getAttribute('data-test');
+                startTest(currentTest);
+            });
+        });
+
+        function startTest(testId) {
+            testSelectionSection.style.display = 'none';
+            testContainerSection.style.display = 'block';
+            testResultsSection.style.display = 'none';
+            
+            testTitleElement.textContent = testsData[testId].title;
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            
+            loadQuestion(testId, 0);
+        }
+
+        function loadQuestion(testId, questionIndex) {
+            const question = testsData[testId].questions[questionIndex];
+            questionTextElement.textContent = question.question;
+            
+            answersContainer.innerHTML = '';
+            question.answers.forEach((answer, index) => {
+                const answerElement = document.createElement('div');
+                answerElement.className = 'quiz-option';
+                
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'answer';
+                input.id = `answer-${index}`;
+                input.value = index;
+                if (userAnswers[questionIndex] === index) {
+                    input.checked = true;
+                }
+                
+                const label = document.createElement('label');
+                label.htmlFor = `answer-${index}`;
+                label.textContent = answer.text;
+                
+                const checkmark = document.createElement('span');
+                checkmark.className = 'checkmark';
+                
+                answerElement.appendChild(input);
+                answerElement.appendChild(label);
+                answerElement.appendChild(checkmark);
+                answersContainer.appendChild(answerElement);
+                
+                input.addEventListener('change', function() {
+                    userAnswers[questionIndex] = parseInt(this.value);
+                });
+            });
+            
+            // Обновление прогресса
+            progressText.textContent = `Вопрос ${questionIndex + 1} из ${testsData[testId].questions.length}`;
+            progressFill.style.width = `${(questionIndex / (testsData[testId].questions.length - 1)) * 100}%`;
+            
+            // Обновление кнопок навигации
+            prevButton.disabled = questionIndex === 0;
+            nextButton.style.display = questionIndex < testsData[testId].questions.length - 1 ? 'block' : 'none';
+            finishButton.style.display = questionIndex === testsData[testId].questions.length - 1 ? 'block' : 'none';
+        }
+
+        // Навигация по вопросам
+        nextButton.addEventListener('click', function() {
+            if (currentQuestionIndex < testsData[currentTest].questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion(currentTest, currentQuestionIndex);
+            }
+        });
+
+        prevButton.addEventListener('click', function() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion(currentTest, currentQuestionIndex);
+            }
+        });
+
+        // Завершение теста
+        finishButton.addEventListener('click', function() {
+            finishTest();
+        });
+
+        function finishTest() {
+            // Проверка ответов
+            let correctCount = 0;
+            const mistakes = [];
+            
+            testsData[currentTest].questions.forEach((question, index) => {
+                const userAnswerIndex = userAnswers[index];
+                if (typeof userAnswerIndex !== 'undefined' && question.answers[userAnswerIndex].correct) {
+                    correctCount++;
+                } else {
+                    mistakes.push({
+                        question: question.question,
+                        explanation: question.explanation
+                    });
+                }
+            });
+            
+            // Сохранение результатов
+            testResults = {
+                testName: testsData[currentTest].title,
+                totalQuestions: testsData[currentTest].questions.length,
+                correctAnswers: correctCount,
+                score: Math.round((correctCount / testsData[currentTest].questions.length) * 100),
+                mistakes: mistakes
+            };
+            
+            // Показ результатов
+            showResults();
+        }
+
+        function showResults() {
+            testContainerSection.style.display = 'none';
+            testResultsSection.style.display = 'block';
+            
+            resultTitleElement.textContent = testResults.testName;
+            scorePercentElement.textContent = testResults.score;
+            correctAnswersElement.textContent = testResults.correctAnswers;
+            totalQuestionsElement.textContent = testResults.totalQuestions;
+            
+            // Отрисовка круга с результатами
+            const scoreCircle = document.querySelector('.score-circle');
+            const circumference = 2 * Math.PI * 40;
+            const offset = circumference - (testResults.score / 100) * circumference;
+            
+            scoreCircle.style.background = `
+                conic-gradient(var(--secondary-color) ${testResults.score}%, var(--light-color) ${testResults.score}%)
+            `;
+            
+            // Список ошибок
+            mistakesListElement.innerHTML = '';
+            testResults.mistakes.forEach(mistake => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>${mistake.question}</strong><p>${mistake.explanation}</p>`;
+                mistakesListElement.appendChild(li);
+            });
+        }
+
+        // Кнопки в разделе результатов
+        restartButton.addEventListener('click', function() {
+            startTest(currentTest);
+        });
+
+        chooseAnotherButton.addEventListener('click', function() {
+            testSelectionSection.style.display = 'block';
+            testContainerSection.style.display = 'none';
+            testResultsSection.style.display = 'none';
+        });
+    </script>
+</body>
+</html>

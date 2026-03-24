@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Как оценивают знания по математике | Анисович В.Д.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Стили для новой страницы (сдержанные, но в единой гамме) */
+        .document-card {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fffef7;
+            border-radius: 48px;
+            padding: 40px 32px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+            border: 1px solid #f0e2d0;
+        }
+        .doc-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .doc-header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #4d3a28;
+            margin-bottom: 12px;
+        }
+        .doc-header p {
+            color: #b68b6b;
+            font-size: 1.1rem;
+        }
+        .doc-badge {
+            display: inline-block;
+            background: #f0e4d4;
+            color: #a07352;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .doc-section {
+            margin: 2rem 0;
+        }
+        .doc-section h2 {
+            font-size: 1.7rem;
+            font-weight: 600;
+            color: #a07352;
+            margin: 32px 0 16px 0;
+            border-left: 6px solid #f3c68e;
+            padding-left: 20px;
+        }
+        .doc-section h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #c28544;
+            margin: 24px 0 12px;
+        }
+        .doc-section p {
+            font-size: 1.05rem;
+            line-height: 1.5;
+            color: #4f5a5e;
+            margin-bottom: 20px;
+        }
+        .grading-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fef9f0;
+            border-radius: 24px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+        .grading-table th, .grading-table td {
+            border: 1px solid #f0e2d0;
+            padding: 12px 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .grading-table th {
+            background: #f5e7d8;
+            font-weight: 700;
+            color: #7b5a3e;
+        }
+        .error-category {
+            background: #fff5eb;
+            padding: 20px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .error-category h4 {
+            color: #b47c48;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .badge-important {
+            background: #f0e4d4;
+            color: #b47c48;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .convert-box {
+            background: #fcf6ed;
+            border-radius: 28px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+        }
+        .convert-item {
+            flex: 1;
+            min-width: 200px;
+            background: white;
+            padding: 15px;
+            border-radius: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .convert-item strong {
+            font-size: 1.2rem;
+            color: #c28544;
+        }
+        @media (max-width: 650px) {
+            .document-card {
+                padding: 24px 20px;
+            }
+            .doc-header h1 {
+                font-size: 1.8rem;
+            }
+            .doc-section h2 {
+                font-size: 1.4rem;
+            }
+            .grading-table th, .grading-table td {
+                font-size: 0.85rem;
+                padding: 8px;
+            }
+            .convert-box {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">Math<span>Teacher</span></a>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Главная</a></li>
+                <li><a href="../method.html">Методичка</a></li>
+                <li><a href="../students.html">Ученикам</a></li>
+                <li><a href="../parents.html" class="active">Родителям</a></li>
+                <li><a href="../blog.html">Блог</a></li>
+                <li><a href="../contact.html">Контакты</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <div class="container py-5">
+            <div class="document-card">
+                <div class="doc-header">
+                    <h1>Как оценивают математику<br>в белорусской школе</h1>
+                    <p>Разбираем критерии, баллы и типичные ошибки — чтобы было понятно и прозрачно</p>
+                </div>
+
+                <div class="doc-section">
+                    <p>В основе оценивания лежат <strong>Методические указания Министерства образования Республики Беларусь</strong> (утв. 15.09.2022, ред. 30.08.2024). В документе чётко прописано, за что ставят отметку, какие ошибки считаются существенными, а какие – нет, и как перевести набранные баллы в привычную 10‑балльную шкалу. Знание этих правил помогает не волноваться лишний раз и понимать свои реальные учебные достижения.</p>
+                </div>
+
+                <!-- Что означают отметки 1–10 -->
+                <div class="doc-section">
+                    <h2>Что означают отметки (1–10 баллов)</h2>
+                    <p>Каждая отметка соответствует определённому уровню владения материалом. Ниже — краткое описание (полный текст в таблице показателей).</p>
+                    <table class="grading-table">
+                        <thead>
+                            <tr><th>Отметка</th><th>Краткая характеристика</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>Узнавание отдельных элементов с помощью учителя.</td></tr>
+                            <tr><td>2</td><td>Самостоятельное узнавание и различение элементов.</td></tr>
+                            <tr><td>3</td><td>Воспроизведение по памяти (неполно, с помощью учителя), выполнение по образцу.</td></tr>
+                            <tr><td>4</td><td>Самостоятельное воспроизведение по памяти, выполнение по образцу.</td></tr>
+                            <tr><td>5</td><td>Воспроизведение на уровне понимания (с помощью), сравнение по заданным признакам, решение типовых задач с помощью.</td></tr>
+                            <tr><td>6</td><td>Самостоятельное воспроизведение на уровне понимания, сравнение, решение типовых задач с частичным обоснованием.</td></tr>
+                            <tr><td>7</td><td>Применение знаний в знакомой ситуации по образцу (с помощью). Доказательные рассуждения, моделирование.</td></tr>
+                            <tr><td>8</td><td>Самостоятельное применение знаний в знакомой ситуации, выбор рациональных способов, полное обоснование.</td></tr>
+                            <tr><td>9</td><td>Оперирование материалом в незнакомой ситуации (с помощью), интеграция знаний, элементы исследования.</td></tr>
+                            <tr><td>10</td><td>Самостоятельное оперирование в нестандартной ситуации, создание алгоритмов, проектно-исследовательская деятельность.</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="badge-important">Важно: отметка выставляется не только за формальное знание, но и за умение применять, рассуждать, находить рациональные пути.</p>
+                </div>
+
+                <!-- Существенные и несущественные ошибки -->
+                <div class="doc-section">
+                    <h2>Какие ошибки считаются существенными?</h2>
+                    <div class="error-category">
+                        <h4>🔴 Существенные ошибки</h4>
+                        <p>Они показывают, что ученик не усвоил правило, формулу, не владеет алгоритмом. За такую ошибку балл за задание снижается <strong>не менее чем на 50%</strong>. К ним относятся:</p>
+                        <ul>
+                            <li>незнание определений, законов, формул, правил;</li>
+                            <li>ошибки в применении алгоритмов, ведущие к неверному результату;</li>
+                            <li>потеря корней или приобретение посторонних корней в уравнениях;</li>
+                            <li>неверное выполнение арифметических действий (если цель работы — проверка вычислительных навыков);</li>
+                            <li>неправильное раскрытие скобок, перенос слагаемых со сменой знака;</li>
+                            <li>ошибки в формулах (сокращённого умножения, тригонометрии, производных, площадей, объёмов);</li>
+                            <li>неверное изображение геометрических фигур (высот, расстояний);</li>
+                            <li>нарушение знака неравенства при умножении на отрицательное число.</li>
+                        </ul>
+                    </div>
+                    <div class="error-category">
+                        <h4>🔘 Несущественные ошибки</h4>
+                        <p>Свидетельствуют о недостаточно полном усвоении, но не искажают сути. Балл снижается <strong>не менее чем на 10%</strong>. Примеры:</p>
+                        <ul>
+                            <li>неточность формулировок определений;</li>
+                            <li>нерациональный метод решения (при правильном ответе);</li>
+                            <li>ошибка в наименовании единиц измерения;</li>
+                            <li>случайная вычислительная погрешность, не связанная с незнанием;</li>
+                            <li>небрежная запись, неправильная дробь в ответе (если это не оговорено).</li>
+                        </ul>
+                        <p><em>За нерациональный способ, небрежность или ошибку в термине балл может быть снижен дополнительно (не менее 5%).</em></p>
+                    </div>
+                </div>
+
+                <!-- Как переводятся баллы за контрольную -->
+                <div class="doc-section">
+                    <h2>Как перевести баллы за контрольную в отметку</h2>
+                    <p>Контрольные и тематические самостоятельные работы в V–VI классах традиционно состоят из 5 заданий, каждое из которых оценивается от 2 до 10 баллов (максимальная сумма — 30 баллов). В старших классах (VII–XI) и при необходимости работы могут включать 10 заданий с возрастающей сложностью: первое задание оценивается в 1 балл, последнее — в 10 баллов, максимальная сумма — 55 баллов. В обоих случаях набранные баллы переводятся в отметку по десятибалльной шкале с помощью утверждённых таблиц перевода.</p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; margin: 30px 0;">
+    <!-- Блок для 5 заданий -->
+    <div style="flex: 1; min-width: 240px; background: #fffef7; border-radius: 32px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #f0e2d0;">
+        <h3 style="font-size: 1.4rem; font-weight: 700; color: #a07352; margin-bottom: 16px; text-align: center;">📘 5 заданий<br><span style="font-size: 0.9rem; font-weight: normal;">(макс. 30 баллов)</span></h3>
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+            <thead>
+                <tr style="background: #f5e7d8;">
+                    <th style="padding: 10px; border: 1px solid #f0e2d0; text-align: center;">Баллы</th>
+                    <th style="padding: 10px; border: 1px solid #f0e2d0; text-align: center;">Отметка</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">1</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">1</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">2</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">2</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">3–5</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">3</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">6–8</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">4</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">9–11</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">5</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">12–14</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">6</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">15–18</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">7</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">19–23</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">8</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">24–28</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">9</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">29–30</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">10</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Блок для 10 заданий -->
+    <div style="flex: 1; min-width: 240px; background: #fffef7; border-radius: 32px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #f0e2d0;">
+        <h3 style="font-size: 1.4rem; font-weight: 700; color: #a07352; margin-bottom: 16px; text-align: center;">📖 10 заданий<br><span style="font-size: 0.9rem; font-weight: normal;">(макс. 55 баллов)</span></h3>
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+            <thead>
+                <tr style="background: #f5e7d8;">
+                    <th style="padding: 10px; border: 1px solid #f0e2d0; text-align: center;">Баллы</th>
+                    <th style="padding: 10px; border: 1px solid #f0e2d0; text-align: center;">Отметка</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">1</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">1</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">2–4</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">2</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">5–7</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">3</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">8–12</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">4</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">13–18</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">5</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">19–25</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">6</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">26–33</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">7</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">34–42</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">8</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">43–52</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">9</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">53–55</td><td style="padding: 8px; border: 1px solid #f0e2d0; text-align: center;">10</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+                    <div class="convert-box">
+                        <div class="convert-item"><strong>✏️ Пример</strong><br>Ученик набрал 17 баллов из 30. По шкале это 7 баллов (отметка «семь»).</div>
+                        <div class="convert-item"><strong>📐 Сложность заданий</strong><br>Последние задания оцениваются выше — они требуют творческого применения знаний.</div>
+                        <div class="convert-item"><strong>✅ Что важно</strong><br>Даже если не решено самое сложное задание, можно набрать достаточно для положительной отметки.</div>
+                    </div>
+                </div>
+
+                <!-- Практические выводы для родителей и учеников -->
+                <div class="doc-section">
+                    <h2>Что из этого следует?</h2>
+                    <p>Прозрачная система оценивания помогает избежать страха перед контрольными. Главное — не заучивать механически, а понимать и уметь применять. Регулярная работа с тренажёрами, разбор типичных ошибок, внимание к формулам и алгоритмам — всё это надёжно повышает результаты.</p>
+                    <div style="background: #fff0e0; padding: 20px; border-radius: 28px; margin-top: 20px;">
+                        <i class="fas fa-file-alt" style="color:#c28544; margin-right: 12px;"></i>
+                        <strong>Источник:</strong> Методические указания по организации контроля и оценки результатов учебной деятельности учащихся (утв. Минобразования РБ, ред. 30.08.2024). Полный текст доступен на официальном портале.
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="../parents.html" class="btn btn-outline">← Вернуться в раздел для родителей</a>
+            </div>  
+
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+    <script src="../js/footer.js"></script>
+</body>
+</html>

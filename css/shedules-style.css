@@ -1,0 +1,227 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #EFF6FC; /* светло-голубой фон */
+  font-family: 'Quicksand', sans-serif;
+  padding: 20px 16px 40px;
+  color: #2c3e50;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Заголовок */
+.page-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.page-header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #2c5a7a; /* тёмно-синий */
+  letter-spacing: -0.3px;
+}
+
+.page-header p {
+  color: #5d8aa8;
+  font-weight: 600;
+  margin-top: 8px;
+  background: white;
+  display: inline-block;
+  padding: 4px 16px;
+  border-radius: 40px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* Кнопки четвертей — пастельные цвета */
+.quarter-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.quarter-btn {
+  border: none;
+  padding: 12px 28px;
+  border-radius: 60px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  color: #2c3e50;
+}
+
+/* разные пастельные цвета */
+.quarter-btn:nth-child(1) { background: #C5E0D4; } /* мятный */
+.quarter-btn:nth-child(2) { background: #FADADD; } /* нежно-розовый */
+.quarter-btn:nth-child(3) { background: #FFE5B4; } /* персиковый */
+.quarter-btn:nth-child(4) { background: #D4E0F7; } /* лавандовый */
+
+.quarter-btn.active {
+  background: #7F9FBB;
+  color: white;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  transform: scale(1.02);
+}
+
+.quarter-btn:active {
+  transform: translateY(2px);
+}
+
+/* Блоки недель */
+.week {
+  background: white;
+  border-radius: 32px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+  transition: all 0.2s;
+  border: 1px solid #e2ecf5;
+}
+
+.week-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 18px 20px;
+  background: #F8FCFE;
+  border-radius: 32px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-bottom: 1px solid #e6f0f8;
+}
+
+.week-header:hover {
+  background: #F0F7FE;
+}
+
+.week-title {
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: #2c5a7a;
+}
+
+.week-dates {
+  font-size: 0.9rem;
+  color: #7f9fbb;
+  font-weight: 600;
+  background: #F0F7FC;
+  padding: 4px 12px;
+  border-radius: 40px;
+}
+
+.toggle-icon {
+  font-size: 1.5rem;
+  color: #9bb7d0;
+  transition: transform 0.3s;
+}
+
+.week.open .toggle-icon {
+  transform: rotate(180deg);
+}
+
+.week-content {
+  display: none;
+  padding: 0 12px 12px 12px;
+  border-top: 1px solid #e6f0f8;
+}
+
+.week.open .week-content {
+  display: block;
+}
+
+/* Карточка урока — с цветными границами */
+.lesson-card {
+  background: #FFFFFF;
+  border-radius: 28px;
+  padding: 16px 20px;
+  margin: 12px 0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+  border-left: 8px solid;
+  transition: transform 0.15s ease, box-shadow 0.2s;
+}
+
+.lesson-card:hover {
+  transform: translateX(5px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.05);
+}
+
+/* чередуем акцентные цвета */
+.lesson-card:nth-child(odd) {
+  border-left-color: #9FC5E8; /* голубой */
+}
+.lesson-card:nth-child(even) {
+  border-left-color: #F9B7B0; /* персиковый */
+}
+
+.lesson-date {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #5d8aa8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+  background: #F0F7FC;
+  display: inline-block;
+  padding: 2px 12px;
+  border-radius: 30px;
+}
+
+.lesson-topic {
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: #2c3e50;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.lesson-homework {
+  font-size: 0.95rem;
+  color: #5c6f82;
+  background: #F8FCFE;
+  padding: 8px 14px;
+  border-radius: 24px;
+  display: inline-block;
+  width: auto;
+  border-left: 4px solid #B8D1E8;
+  font-weight: 500;
+}
+
+.lesson-homework strong {
+  font-weight: 800;
+  color: #e2935e;
+}
+
+/* Адаптация */
+@media (max-width: 550px) {
+  body {
+    padding: 16px 12px;
+  }
+  .quarter-btn {
+    padding: 8px 20px;
+    font-size: 1rem;
+  }
+  .week-header {
+    padding: 14px 16px;
+  }
+  .week-title {
+    font-size: 1.1rem;
+  }
+  .lesson-topic {
+    font-size: 1rem;
+  }
+  .lesson-homework {
+    font-size: 0.85rem;
+    padding: 6px 10px;
+  }
+}

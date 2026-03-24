@@ -1,0 +1,97 @@
+.article-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #fffef7;
+            border-radius: 48px;
+            padding: 40px 32px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+            border: 1px solid #f0e2d0;
+        }
+        .article-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .article-header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #4d3a28;
+            margin-bottom: 12px;
+        }
+        .article-header p {
+            color: #b68b6b;
+            font-size: 1.1rem;
+        }
+        .article-image {
+            width: 100%;
+            border-radius: 32px;
+            margin: 24px 0;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+        .article-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: #b68b6b;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        .article-meta i {
+            margin-right: 6px;
+            color: #b68b6b;
+        }
+        .article-content h2 {
+            font-size: 1.7rem;
+            font-weight: 600;
+            color: #a07352;
+            margin: 32px 0 16px 0;
+            border-left: 6px solid #f3c68e;
+            padding-left: 20px;
+        }
+        .article-content h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #c28544;
+            margin: 24px 0 12px 0;
+        }
+        .article-content p {
+            font-size: 1.05rem;
+            line-height: 1.5;
+            color: #4f5a5e;
+            margin-bottom: 20px;
+        }
+        .article-content ul, .article-content ol {
+            margin: 16px 0 24px 32px;
+            color: #4f5a5e;
+        }
+        .article-content li {
+            margin-bottom: 8px;
+        }
+        .tip-box {
+            background: #fef4e8;
+            border-left: 6px solid #f3c68e;
+            padding: 20px 24px;
+            border-radius: 24px;
+            margin: 30px 0;
+        }
+        .tip-box i {
+            color: #d49c5c;
+            margin-right: 12px;
+        }
+        @media (max-width: 600px) {
+            .article-container {
+                padding: 24px 20px;
+            }
+            .article-header h1 {
+                font-size: 1.8rem;
+            }
+            .article-content h2 {
+                font-size: 1.4rem;
+            }
+        }
