@@ -409,6 +409,15 @@ textarea.form-control {
 
 /* Адаптивность для мобильных: чуть уменьшим высоту, если нужно */
 @media (max-width: 768px) {
+    .navbar .container {
+        flex-direction: column;
+        gap: 16px;
+    }
+    .nav-menu {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+    }
     .blog { 
         flex-direction: column; 
     }
