@@ -269,24 +269,6 @@ a {
     text-decoration: underline;
 }
 
-@media (max-width: 768px) {
-    .polaroid-blod { 
-        flex-direction: column; 
-    }
-    .hero-avatar, .blog-img {
-        width: 100%;
-    }
-    .navbar .container {
-        flex-direction: column;
-        gap: 16px;
-    }
-    .nav-menu {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 16px;
-    }
-}
-
 /* ===== ГЛАВНЫЙ ЭКРАН (ВИЗИТКА) ===== */
 .hero {
     padding: 60px 0 40px;
