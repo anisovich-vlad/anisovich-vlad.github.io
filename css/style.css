@@ -55,7 +55,8 @@ a {
 }
 
 @media (max-width: 576px) {
-    .hero-avatar { width: 100%; }
+    .polaroid-blod { flex-direction: column; }
+    .hero-avatar .blog-img { width: 100%; }
     .col-sm-12 { width: 100%; }
     .col-sm-6 { width: 50%; }
 }
@@ -281,7 +282,12 @@ a {
 }
 
 @media (max-width: 768px) {
-    .hero-avatar { width: 100%; }
+    .polaroid-blod { 
+        flex-direction: column; 
+    }
+    .hero-avatar .blog-img {
+        width: 100%;
+    }
     .navbar .container {
         flex-direction: column;
         gap: 16px;
