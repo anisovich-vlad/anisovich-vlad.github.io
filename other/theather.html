@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Знатоки театра | Брейн-ринг (экран для ведущего)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #2c1a1a 0%, #1f0f0f 100%);
+            font-family: 'Segoe UI', 'Roboto', 'Georgia', serif;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+
+
+        .game-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(30, 15, 15, 0.75);
+            backdrop-filter: blur(2px);
+            border-radius: 60px 30px 60px 30px;
+            padding: 20px;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,215,0,0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .title-block {
+            text-align: center;
+            position: relative;
+        }
+        .title-block h1 {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #f9e0a0, #d4af37, #b8860b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+            letter-spacing: 2px;
+        }
+        .title-block p {
+            color: #eedd99;
+            font-style: italic;
+            border-top: 1px solid #d4af37;
+            border-bottom: 1px solid #d4af37;
+            display: inline-block;
+            padding: 5px 20px;
+            font-size: 1.1rem;
+            backdrop-filter: blur(4px);
+        }
+        .theater-icons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 8px;
+            font-size: 2rem;
+        }
+
+        /* переключатель раундов */
+        .round-switch {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+        .round-btn {
+            background: #4a2a1a;
+            border: 2px solid #e4b363;
+            padding: 10px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 40px;
+            cursor: pointer;
+            color: #f5e2b0;
+            transition: all 0.2s;
+        }
+        .round-btn.active {
+            background: #b8860b;
+            color: #2c1810;
+            border-color: #ffd966;
+            box-shadow: 0 0 12px gold;
+        }
+
+        /* игровое поле (своя игра) */
+        .game-board {
+            background: #2f1e14e0;
+            border-radius: 40px;
+            padding: 15px;
+            backdrop-filter: blur(4px);
+        }
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .category-title {
+            background: linear-gradient(145deg, #c9a03d, #9c6e1a);
+            text-align: center;
+            padding: 15px 5px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #221105;
+            border-radius: 30px 10px 30px 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: inset 0 -2px 0 #543a1a, 0 4px 8px black;
+        }
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+        .question-cell {
+            background: #3b261cd9;
+            text-align: center;
+            padding: 20px 10px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #f7d44a;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 5px 0 #2a140c;
+            border: 1px solid #e4b363;
+        }
+        .question-cell.used {
+            background: #2a1e14;
+            color: #6a5a44;
+            cursor: default;
+            filter: grayscale(0.4);
+            box-shadow: none;
+            transform: translateY(2px);
+        }
+        .question-cell:active:not(.used) {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        /* блок Кот в мешке */
+        .kot-section {
+            display: none;
+            margin-top: 20px;
+        }
+        .koty-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        .kot-card {
+            background: #4d2a1c;
+            width: 180px;
+            padding: 30px 10px;
+            text-align: center;
+            border-radius: 80px 30px 80px 30px;
+            cursor: pointer;
+            transition: 0.1s linear;
+            box-shadow: 0 10px 0 #2a140c;
+            border: 2px solid #e7bc7e;
+        }
+        .kot-card.used-kot {
+            filter: grayscale(0.6);
+            opacity: 0.6;
+            cursor: default;
+            transform: none;
+            box-shadow: 0 5px 0 #2a140c;
+        }
+        .kot-emoji {
+            font-size: 4rem;
+        }
+        .kot-title {
+            font-size: 1.5rem;
+            color: #ffde9e;
+            font-weight: bold;
+        }
+
+        /* модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #fdf8ed;
+            background-image: radial-gradient(circle at 10% 20%, rgba(215,180,100,0.1) 2%, transparent 2.5%);
+            background-size: 20px 20px;
+            max-width: 1000px;
+            width: 90%;
+            border-radius: 50px 20px 50px 20px;
+            padding: 25px;
+            border: 8px double #b87c2e;
+            color: #2d1b0f;
+            position: relative;
+        }
+        .modal-question {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #f2e3c9;
+            border-radius: 30px;
+        }
+        .modal-answer {
+            background: #e9dbbc;
+            padding: 12px;
+            border-radius: 30px;
+            margin: 15px 0;
+            font-size: 2rem;
+            display: none;
+        }
+        .modal-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        .modal-buttons button {
+            background: #c28234;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .close-modal {
+            background: #5e3a24;
+            color: white;
+        }
+        footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #e7c27d;
+            font-size: 0.8rem;
+        }
+        @media (max-width: 780px) {
+            .category-title { font-size: 0.8rem; }
+            .question-cell { font-size: 1.2rem; padding: 12px; }
+            .kot-card { width: 130px; padding: 20px 5px; }
+            .kot-emoji { font-size: 2.5rem; }
+        }
+        .row {
+            display: flex;
+            flex-direction: row;
+            gap: 100px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+<div class="row"> 
+    <div class="title-block">
+        <h1>🎭 Знатокі тэатра 🎭</h1>
+    </div>
+    <div class="round-switch">
+        <button class="round-btn active" data-round="main">🎭 Асноўны раўнд</button>
+        <button class="round-btn" data-round="kot">🐱 Кот у мяшку (фінал)</button>
+    </div>
+</div>
+    <!-- Основное поле Своя игра -->
+    <div id="mainRound" class="game-board">
+        <div class="categories" id="categoriesRow"></div>
+        <div class="questions-grid" id="questionsGrid"></div>
+    </div>
+
+    <!-- Блок Кот в мешке -->
+    <div id="kotRound" class="kot-section">
+        <div class="koty-grid" id="kotyGrid"></div>
+    </div>
+</div>
+
+<!-- Модалка для основного раунда -->
+<div id="modalRound1" class="modal">
+    <div class="modal-content">
+        <div id="modalQuestionText" class="modal-question"></div>
+        <div id="modalAnswerBlock" class="modal-answer"></div>
+        <div class="modal-buttons">
+            <button id="revealAnswerBtn">📜 Паказаць адказ</button>
+            <button id="closeModal1" class="close-modal">✖ Закрыць</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модалка для Кота в мешке -->
+<div id="modalRound2" class="modal">
+    <div class="modal-content">
+        <div id="kotModalQuestion" class="modal-question"></div>
+        <div id="kotModalAnswer" class="modal-answer"></div>
+        <div class="modal-buttons">
+            <button id="revealKotAnswer">🐱 Паказаць адказ</button>
+            <button id="closeModal2" class="close-modal">✖ Закрыць</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ---------- ДАННЫЕ ИГРЫ ----------
+    const categories = [
+        "Тэатральныя прафесіі", 
+        "Казка на сцэне", 
+        "Правілы этыкету", 
+        "Чароўны свет закулісся", 
+        "Беларускі тэатр"
+    ];
+    
+    const questionsData = [
+        [ // Професіі
+            { q: "Хто галоўны чараўнік у тэатры? Кіруе акцёрамі, кажа як гуляць.", a: "Рэжысёр" },
+            { q: "Гэты чалавек сочыць за парадкам у зале, правярае білеты і дапамагае знайсці месца.", a: "Білетэр (кантролер)" },
+            { q: "Каб акцёр быў падобны на бабулю ці Бабу-Ягу, патрэбен гэты спецыяліст. Наносіць грым, клеіць вусы.", a: "Грымёр" },
+            { q: "Стаіць за пультам і кіруе святлом: можа зрабіць дзень, зорнае неба.", a: "Асвятляльнік (светлааператар)" }
+        ],
+        [ // Сказка на сцене
+            { q: "Як звалі дзяўчынку з блакітнымі валасамі, якую сыграла актрыса? Яна была лялькай у тэатры Карабаса-Барабаса.", a: "Мальвіна" },
+            { q: "У гэтай казцы кот насіў боты, а маркіз Карабас стаў вядомым вельможам.", a: "Кот у ботах" },
+            { q: "У якім тэатры працаваў тата Карла, каб купіць азбуку для Бураціна?", a: "Лялечны тэатр" },
+            { q: "Казкавы герой з доўгім носам, якога стварыў Аляксей Талстой. Часта ставіцца на сцэне ТЮГа.", a: "Бураціна" }
+        ],
+        [ // Этикет
+            { q: "Калі вы спазніліся ў тэатр, калі можна зайсці ў залу? Падчас антракта ці падчас дзеяння?", a: "Падчас антракта (перапынку)" },
+            { q: "Што трэба зрабіць з мабільным тэлефонам перад пачаткам спектакля?", a: "Выключыць (ці безгукавы рэжым)" },
+            { q: "Ці можна есці бутэрброды ці шарудаць цукеркамі падчас спектакля?", a: "Не. У зале не ядуць, толькі ў буфеце ў антракце" },
+            { q: "Як правільна дзякаваць акцёрам за гульню, не выкрыкваючы з месца?", a: "Апладысментамі (хлопкамі) і крыкамі «Брава!»" }
+        ],
+        [ // Закулисье
+            { q: "Як называецца тканевая сцяна, якая адкрываецца перад гледачамі ў пачатку спектакля?", a: "Занавес" },
+            { q: "Што такое «аншлаг»? Калі ў зале мала месцаў ці калі ўсе квіткі прададзены?", a: "Усе квіткі прададзены, поўная зала" },
+            { q: "Як называецца перапынак паміж дзеяннямі спектакля?", a: "Антракт" },
+            { q: "Галоўная частка сцэны, якая знаходзіцца перад гледачамі, куды выходзяць акцёры.", a: "Авансцэна" }
+        ],
+        [ // Беларускі тэатр
+            { q: "У якім горадзе знаходзіцца галоўны тэатр нашай краіны — Нацыянальны акадэмічны Вялікі тэатр оперы і балета?", a: "Мінск" },
+            { q: "Як называецца знакаміты мінскі тэатр, дзе «жывуць» лялькі? Ён знаходзіцца на вуліцы Энгельса.", a: "Беларускі дзяржаўны тэатр лялек" },
+            { q: "Гэты тэатр размешчаны ў Гродне. Ён лічыцца адным з найстарэйшых у Беларусі. У яго назве ёсць слова «лялечны». Як ён называецца?", a: "Гродзенскі абласны тэатр лялек" },
+            { q: "У Магілёве ёсць тэатр, які носіць імя вядомага беларускага драматурга. Яго прозвішча — як назва нашага абласнога цэнтра. Назавіце гэты тэатр.", a: "Магілёўскі абласны драматычны тэатр імя А. Куляшова" }
+        ]
+    ];
+    
+    const kotQuestions = [
+        { q: "У тэатры ёсць правіла: «Не ўлазь у чужы...» што? Гэтую частку тэатра называюць святая святых, туды пускаюць толькі акцёраў і супрацоўнікаў сцэны.", a: "Закуліссе (грымёрная, цэх)" },
+        { q: "Так называюць момант, калі акцёр забыў тэкст ці пераблытаў словы проста на сцэне. Гледачы звычайна гэтага не заўважаюць, калі партнёр дапамагае. Што гэта?", a: "Агаворка (накладка, западанне)" },
+        { q: "Уявіце: спектакль толькі пачаўся, але раптам гасне святло, гучыць рэзкі званок, і занавес зноў зачыняецца. Як называецца гэтая непрыемная сітуацыя?", a: "Аварыя, тэхнічны збой, спектакль сарваўся" },
+        { q: "У кожным тэатры ёсць чалавек, які перад выхадам на сцэну абавязкова шэпча: «Ні пуху ні пяра!». А акцёр адказвае яму адным словам. Якім?", a: "Да чорта!" },
+        { q: "Гэты прадмет — сімвал тэатра. Калі яго падняць, спектакль пачынаецца. Калі апусціць — заканчваецца. Што гэта?", a: "Занавес" }
+    ];
+    
+    // Состояние
+    let usedCells = Array(5).fill().map(() => Array(4).fill(false));
+    let usedKot = Array(5).fill(false);
+    let currentCellCoords = null;
+    let currentKotIndex = null;
+    
+    // DOM элементы
+    const mainRoundDiv = document.getElementById("mainRound");
+    const kotRoundDiv = document.getElementById("kotRound");
+    const modal1 = document.getElementById("modalRound1");
+    const modal2 = document.getElementById("modalRound2");
+    
+    function renderMainBoard() {
+        const categoriesRow = document.getElementById("categoriesRow");
+        categoriesRow.innerHTML = "";
+        categories.forEach(cat => {
+            const div = document.createElement("div");
+            div.className = "category-title";
+            div.innerText = cat;
+            categoriesRow.appendChild(div);
+        });
+        
+        const grid = document.getElementById("questionsGrid");
+        grid.innerHTML = "";
+        const prices = [10,20,30,40];
+        for(let row=0; row<4; row++) {
+            for(let col=0; col<5; col++) {
+                const cell = document.createElement("div");
+                cell.className = "question-cell";
+                if(usedCells[col][row]) cell.classList.add("used");
+                cell.innerText = prices[row];
+                cell.addEventListener("click", (function(c, r) { 
+                    return function() { openQuestionModal(c, r); };
+                })(col, row));
+                grid.appendChild(cell);
+            }
+        }
+    }
+    
+    function openQuestionModal(catIdx, priceIdx) {
+        if(usedCells[catIdx][priceIdx]) return;
+        currentCellCoords = {cat: catIdx, row: priceIdx};
+        const questionObj = questionsData[catIdx][priceIdx];
+        const price = [10,20,30,40][priceIdx];
+        document.getElementById("modalQuestionText").innerHTML = `❓ ${questionObj.q} (${price} балаў)`;
+        document.getElementById("modalAnswerBlock").innerHTML = `<strong>✔ Адказ:</strong> ${questionObj.a}`;
+        document.getElementById("modalAnswerBlock").style.display = "none";
+        modal1.style.display = "flex";
+    }
+    
+    function closeModal1AndMarkUsed() {
+        if(currentCellCoords) {
+            const {cat, row} = currentCellCoords;
+            usedCells[cat][row] = true;
+            renderMainBoard();
+            currentCellCoords = null;
+        }
+        modal1.style.display = "none";
+    }
+    
+    function renderKoty() {
+        const container = document.getElementById("kotyGrid");
+        container.innerHTML = "";
+        for(let i=0; i<kotQuestions.length; i++) {
+            const card = document.createElement("div");
+            card.className = "kot-card";
+            if(usedKot[i]) card.classList.add("used-kot");
+            card.innerHTML = `<div class="kot-title">Кот №${i+1}</div>`;
+            card.addEventListener("click", (idx => () => { if(!usedKot[idx]) openKotModal(idx); })(i));
+            container.appendChild(card);
+        }
+    }
+    
+    function openKotModal(idx) {
+        if(usedKot[idx]) return;
+        currentKotIndex = idx;
+        const qData = kotQuestions[idx];
+        document.getElementById("kotModalQuestion").innerHTML = `🐱 Кот у мяшку: ${qData.q}`;
+        document.getElementById("kotModalAnswer").innerHTML = `<strong>🎭 Адказ:</strong> ${qData.a}`;
+        document.getElementById("kotModalAnswer").style.display = "none";
+        modal2.style.display = "flex";
+    }
+    
+    function closeModal2AndMarkUsed() {
+        if(currentKotIndex !== null) {
+            usedKot[currentKotIndex] = true;
+            renderKoty();
+            currentKotIndex = null;
+        }
+        modal2.style.display = "none";
+    }
+    
+    // Переключение раундов
+    function switchRound(round) {
+        if(round === "main") {
+            mainRoundDiv.style.display = "block";
+            kotRoundDiv.style.display = "none";
+            document.querySelector("[data-round='main']").classList.add("active");
+            document.querySelector("[data-round='kot']").classList.remove("active");
+        } else {
+            mainRoundDiv.style.display = "none";
+            kotRoundDiv.style.display = "block";
+            document.querySelector("[data-round='kot']").classList.add("active");
+            document.querySelector("[data-round='main']").classList.remove("active");
+            renderKoty();
+        }
+    }
+    
+    // Инициализация и слушатели
+    function init() {
+        renderMainBoard();
+        
+        document.getElementById("revealAnswerBtn").addEventListener("click", () => {
+            document.getElementById("modalAnswerBlock").style.display = "block";
+        });
+        document.getElementById("closeModal1").addEventListener("click", closeModal1AndMarkUsed);
+        
+        document.getElementById("revealKotAnswer").addEventListener("click", () => {
+            document.getElementById("kotModalAnswer").style.display = "block";
+        });
+        document.getElementById("closeModal2").addEventListener("click", closeModal2AndMarkUsed);
+        
+        document.querySelectorAll(".round-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                switchRound(btn.dataset.round);
+            });
+        });
+        
+        kotRoundDiv.style.display = "none";
+    }
+    
+    init();
+</script>
+</body>
+</html>
