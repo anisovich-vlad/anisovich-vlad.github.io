@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Викторина: По страницам истории моей страны</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #fffaf5;
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image: radial-gradient(circle at 10% 20%, rgba(200, 40, 40, 0.02) 2%, transparent 2.5%),
+                              radial-gradient(circle at 85% 70%, rgba(46, 125, 50, 0.02) 1.8%, transparent 2%);
+            background-size: 48px 48px, 32px 32px;
+        }
+
+        .slides-container {
+            width: 100%;
+            max-width: 1200px;
+            min-height: 90vh;
+            background: #ffffff;
+            border-radius: 48px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            display: none;
+            min-height: 90vh;
+            padding: 2rem 2rem 2rem 2rem;
+            background: #ffffff;
+            animation: fadeSlide 0.35s ease;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(6px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* Титульный слайд */
+        .title-slide {
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            background: #ffffff;
+        }
+
+        .title-slide h1 {
+            font-size: 3.6rem;
+            font-weight: 800;
+            color: #c62828;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            max-width: 900px;
+            margin-bottom: 1.8rem;
+            border-bottom: 5px solid #2e7d32;
+            display: inline-block;
+            padding-bottom: 0.35rem;
+            line-height: 1.2;
+        }
+
+        .ornament {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0 25px;
+            flex-wrap: wrap;
+        }
+        .ornament-line {
+            width: 70px;
+            height: 4px;
+            background: #c62828;
+            border-radius: 4px;
+        }
+        .ornament-line.green {
+            background: #2e7d32;
+            width: 40px;
+        }
+        .ornament-diamond {
+            width: 12px;
+            height: 12px;
+            background: #e09d32;
+            transform: rotate(45deg);
+            margin: 0 5px;
+        }
+
+        .red-accent {
+            width: 70px;
+            height: 4px;
+            background: #c62828;
+            margin: 15px auto;
+            border-radius: 4px;
+        }
+        .green-dot {
+            width: 8px;
+            height: 8px;
+            background: #2e7d32;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 4px;
+        }
+
+        /* Заголовки конкурсов */
+        .contest-header {
+            border-left: 8px solid #c62828;
+            padding-left: 24px;
+            margin-bottom: 2rem;
+            background-color: #ffffff;
+        }
+        .contest-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e4a2f;
+            letter-spacing: -0.3px;
+        }
+        .contest-header p {
+            color: #5f6b5e;
+            margin-top: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Карточка вопроса */
+        .question-card {
+            background: #ffffff;
+            border: 2px solid #f0e7db;
+            border-radius: 36px;
+            padding: 2rem 2rem;
+            margin: 0.5rem 0 1.2rem;
+            box-shadow: 0 12px 22px -12px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+        .question-card::before {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: 28px;
+            width: 28px;
+            height: 28px;
+            border-left: 3px solid #c62828;
+            border-top: 3px solid #c62828;
+            border-radius: 8px 0 0 0;
+            opacity: 0.4;
+        }
+        .question-text {
+            text-align: center;
+            font-size: 1.7rem;
+            font-weight: 600;
+            line-height: 1.4;
+            color: #1a2e24;
+            margin: 0.8rem 0 1.2rem;
+            min-height: 80px;
+        }
+
+        /* Область ответа всегда видна */
+        .answer-area {
+            text-align: center;
+            padding: 1rem 1.6rem;
+            border-radius: 28px;
+            margin-top: 1.2rem;
+            font-size: 1.7rem;
+            min-height: 85px;
+        }
+        .answer-text {
+            color: green;
+            font-weight: 700;
+        }
+
+        /* Навигация вопроса */
+        .question-nav {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 1.8rem;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        button {
+            background: #c62828;
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 10px 24px;
+            border-radius: 48px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            letter-spacing: 0.3px;
+        }
+        button:hover {
+            background: #9a2a2a;
+            transform: translateY(-2px);
+        }
+        button.secondary {
+            background: #2e7d32;
+        }
+        button.secondary:hover {
+            background: #1e5822;
+        }
+        button.outline {
+            background: #fef3e9;
+            border: 2px solid #c62828;
+            color: #c62828;
+            box-shadow: none;
+        }
+        button.outline:hover {
+            background: #c6282812;
+            transform: translateY(-1px);
+        }
+        .question-counter {
+            background: #eef2e8;
+            padding: 7px 18px;
+            border-radius: 60px;
+            font-weight: 600;
+            color: #2d4a34;
+            font-size: 0.9rem;
+            border: 1px solid #d0dbc8;
+        }
+
+        /* Навигация между конкурсами */
+        .contest-switch {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1.2rem;
+            border-top: 2px solid #e7e9e2;
+            gap: 16px;
+        }
+        .contest-switch button {
+            background: #e8eddf;
+            color: #2c5a2c;
+            border: none;
+            box-shadow: none;
+            font-weight: 600;
+        }
+        .contest-switch button:hover {
+            background: #d4ddcc;
+            transform: translateY(-1px);
+        }
+
+        /* Финальный слайд */
+        .final-slide {
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        .final-slide h3 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #c62828;
+            margin-bottom: 1rem;
+        }
+        .final-slide p {
+            font-size: 1.3rem;
+            color: #2e6737;
+            background: #f2f8ec;
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 60px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 750px) {
+            .slide {
+                padding: 1.3rem;
+            }
+            .question-text {
+                font-size: 1.3rem;
+            }
+            .contest-header h2 {
+                font-size: 1.5rem;
+            }
+            .title-slide h1 {
+                font-size: 2.1rem;
+            }
+            button {
+                padding: 7px 16px;
+                font-size: 0.85rem;
+            }
+        }
+
+        .slide {
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+        .slide::-webkit-scrollbar {
+            width: 6px;
+            background: #f1f1f1;
+        }
+        .slide::-webkit-scrollbar-thumb {
+            background: #c62828;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="slides-container">
+    <!-- Слайд 0: ТИТУЛЬНЫЙ -->
+    <div class="slide title-slide active" id="slide0">
+        <div>
+            <h1>По страницам истории моей страны</h1>
+            <div class="ornament">
+                <div class="ornament-line"></div>
+                <div class="ornament-diamond"></div>
+                <div class="ornament-line green"></div>
+                <div class="ornament-diamond"></div>
+                <div class="ornament-line"></div>
+            </div>
+            <div class="red-accent"></div>
+            <div style="margin-top: 48px;">
+                <button id="startBtn" class="secondary" style="background:#2e7d32; font-size:1.2rem; padding:14px 38px; box-shadow: 0 6px 12px rgba(46,125,50,0.2);">Начать викторину</button>
+            </div>
+            <div style="margin-top: 35px;">
+                <span class="green-dot"></span><span class="green-dot"></span><span class="green-dot"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 1: Конкурс 1 - Разминка (10 вопросов, исправлено) -->
+    <div class="slide" id="slide1">
+        <div>
+            <div class="contest-header">
+                <h2>Конкурс 1. Разминка</h2>
+                <p>Вопрос-ответ · символы и главные факты Беларуси</p>
+            </div>
+            <div class="question-card">
+                <div class="question-text" id="q1-text">Загрузка...</div>
+                <div class="answer-area" id="q1-answer">
+                    <div class="answer-text" id="q1-answer-text"></div>
+                </div>
+                <div class="question-nav">
+                    <div class="nav-buttons">
+                        <button id="q1-prev" class="outline">Пред.</button>
+                        <button id="q1-next" class="outline">След.</button>
+                    </div>
+                    <button id="q1-show-answer" class="secondary">Показать ответ</button>
+                    <div class="question-counter" id="q1-counter">Вопрос 1 / 10</div>
+                </div>
+            </div>
+        </div>
+        <div class="contest-switch">
+            <button id="prevContestBtn" disabled>← Предыдущий конкурс</button>
+            <button id="nextContestBtn">Следующий конкурс →</button>
+        </div>
+    </div>
+
+    <!-- Слайд 2: Конкурс 2 - Моя Беларусь: страна городов (10 вопросов, исправлено) -->
+    <div class="slide" id="slide2">
+        <div>
+            <div class="contest-header">
+                <h2>Конкурс 2. Моя Беларусь – страна городов</h2>
+                <p>Угадай город по уникальному описанию</p>
+            </div>
+            <div class="question-card">
+                <div class="question-text" id="q2-text"></div>
+                <div class="answer-area" id="q2-answer">
+                    <div class="answer-text" id="q2-answer-text"></div>
+                </div>
+                <div class="question-nav">
+                    <div class="nav-buttons">
+                        <button id="q2-prev" class="outline">Пред.</button>
+                        <button id="q2-next" class="outline">След.</button>
+                    </div>
+                    <button id="q2-show-answer" class="secondary">Показать ответ</button>
+                    <div class="question-counter" id="q2-counter">Вопрос 1 / 10</div>
+                </div>
+            </div>
+        </div>
+        <div class="contest-switch">
+            <button id="prevContestBtn2" class="outline">← Предыдущий конкурс</button>
+            <button id="nextContestBtn2">Следующий конкурс →</button>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Конкурс 3 - Культура и традиции (10 вопросов) -->
+    <div class="slide" id="slide3">
+        <div>
+            <div class="contest-header">
+                <h2>Конкурс 3. Что мы знаем о культуре и традициях?</h2>
+                <p>Быт, искусство, национальное наследие</p>
+            </div>
+            <div class="question-card">
+                <div class="question-text" id="q3-text"></div>
+                <div class="answer-area" id="q3-answer">
+                    <div class="answer-text" id="q3-answer-text"></div>
+                </div>
+                <div class="question-nav">
+                    <div class="nav-buttons">
+                        <button id="q3-prev" class="outline">Пред.</button>
+                        <button id="q3-next" class="outline">След.</button>
+                    </div>
+                    <button id="q3-show-answer" class="secondary">Показать ответ</button>
+                    <div class="question-counter" id="q3-counter">Вопрос 1 / 10</div>
+                </div>
+            </div>
+        </div>
+        <div class="contest-switch">
+            <button id="prevContestBtn3" class="outline">← Предыдущий конкурс</button>
+            <button id="nextContestBtn3">Завершить викторину →</button>
+        </div>
+    </div>
+
+    <!-- Слайд 4: Финальный экран -->
+    <div class="slide" id="slide4">
+        <div class="final-slide" style="flex:1; display: flex; flex-direction: column; justify-content: center;">
+            <h3>Викторина завершена</h3>
+            <div class="ornament" style="margin: 15px 0;">
+                <div class="ornament-line green"></div>
+                <div class="ornament-diamond"></div>
+                <div class="ornament-line"></div>
+            </div>
+            <p>Спасибо за участие! Вы отлично знаете историю своей страны.</p>
+            <div style="margin-top: 40px;">
+                <button id="restartBtn" style="background:#2e7d32; padding: 12px 30px;">Вернуться к началу</button>
+            </div>
+        </div>
+        <div class="contest-switch" style="justify-content: center; margin-top: 0;">
+            <button id="backToPrevContest" class="outline">← Предыдущий конкурс</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ---------- ИСПРАВЛЕННЫЕ ДАННЫЕ (все ошибки устранены) ----------
+    const contest1 = {
+        questions: [
+            { q: "Как называется главный закон нашей страны?", a: "Конституция" },
+            { q: "Как называется столица Республики Беларусь?", a: "Минск" },
+            { q: "Какие цвета у нашего государственного флага?", a: "Красный и зелёный" },
+            { q: "Назовите три основных символа любого государства.", a: "Герб, флаг, гимн" },
+            { q: "Какой древний город считается «колыбелью» белорусской государственности?", a: "Полоцк" },
+            { q: "Кто является Главой государства Республики Беларусь?", a: "Президент" },
+            { q: "Какой национальный парк Беларуси включён в список Всемирного наследия ЮНЕСКО и является домом для зубров?", a: "Беловежская пуща" },
+            { q: "Какие государственные языки в Республике Беларусь?", a: "Белорусский и русский" },
+            { q: "Назовите самую длинную реку, протекающую по территории Беларуси.", a: "Днепр" },
+            { q: "Как называется традиционный белорусский геометрический или растительный узор, используемый в вышивке?", a: "Орнамент" }
+        ]
+    };
+    
+    const contest2 = {
+        questions: [
+            { q: "Этот город — крупный промышленный центр на юго-востоке страны. Он стоит на реке Сож. Его часто называют «студенческой столицей».", a: "Гомель" },
+            { q: "Один из древнейших городов Беларуси, расположен на реке Западная Двина. Здесь находится знаменитый Софийский собор и сохранились старинные валы.", a: "Полоцк" },
+            { q: "Этот город на западе Беларуси известен своими средневековыми замками. Здесь находится Мирский замок (всемирное наследие ЮНЕСКО).", a: "Мир (Гродненская область)" },
+            { q: "Город, который является «сердцем» нашей Родины. Здесь находятся площадь Независимости, Национальная библиотека и правительство.", a: "Минск" },
+            { q: "Город на границе с Польшей, известный своей крепостью и ежегодным фестивалем национальных культур.", a: "Гродно" },
+            { q: "Город на юго-западе, где находится Брестская крепость-герой.", a: "Брест" },
+            { q: "Культурная столица Беларуси, родина Марка Шагала и место проведения фестиваля «Славянский базар».", a: "Витебск" },
+            { q: "Областной центр на Днепре, известный своей ратушей, дворцом Потёмкина и драматическим театром.", a: "Могилёв" },
+            { q: "Город, где родился Якуб Колас, известный своим крупнейшим шинным заводом и расположенный на реке Березина.", a: "Бобруйск" },
+            { q: "Город в Минской области, знаменитый своим средневековым замком Радзивиллов и дворцовым комплексом.", a: "Несвиж" }
+        ]
+    };
+    
+    const contest3 = {
+        questions: [
+            { q: "Традиционное белорусское блюдо из тёртого картофеля.", a: "Драники" },
+            { q: "Как в старину называли белорусский кукольный театр?", a: "Батлейка" },
+            { q: "Какой национальный узор часто можно увидеть на вышиванках и рушниках?", a: "Орнамент" },
+            { q: "Назовите международный фестиваль искусств, который ежегодно собирает в Витебске звёзд со всего мира.", a: "Славянский базар" },
+            { q: "Название белорусского народного танца, который часто исполняют парами.", a: "Лявониха" },
+            { q: "Традиционный соломенный символ, который вешали в доме для защиты.", a: "Павук (соломенный паук)" },
+            { q: "Известный белорусский композитор, руководитель ансамбля «Песняры».", a: "Владимир Мулявин" },
+            { q: "Название древнего языческого праздника летнего солнцестояния, который широко отмечается в Беларуси.", a: "Купалье (Иван Купала)" },
+            { q: "Что такое «слуцкие пояса»?", a: "Тканые пояса ручной работы с золотыми и серебряными нитями" },
+            { q: "Название традиционного белорусского напитка из хлеба или ягод, часто подаваемого к драникам.", a: "Квас" }
+        ]
+    };
+
+    // Состояния
+    let stateIdx = {
+        slide1: 0,
+        slide2: 0,
+        slide3: 0
+    };
+
+    let answerVisible = {
+        slide1: false,
+        slide2: false,
+        slide3: false
+    };
+
+    const slides = document.querySelectorAll('.slide');
+    let currentSlideIdx = 0;
+
+    function clearAnswer(contestId, stateKey) {
+        const answerContainer = document.getElementById(`${contestId}-answer-text`);
+        if (answerContainer) answerContainer.innerHTML = '';
+        answerVisible[stateKey] = false;
+    }
+
+    function showAnswer(contestId, contestData, stateKey) {
+        const idx = stateIdx[stateKey];
+        const correctAnswer = contestData.questions[idx].a;
+        const answerContainer = document.getElementById(`${contestId}-answer-text`);
+        if (answerContainer) answerContainer.innerHTML = correctAnswer;
+        answerVisible[stateKey] = true;
+    }
+
+    function toggleAnswer(contestId, contestData, stateKey) {
+        if (answerVisible[stateKey]) {
+            clearAnswer(contestId, stateKey);
+        } else {
+            showAnswer(contestId, contestData, stateKey);
+        }
+    }
+
+    function updateContestDisplay(contestId, contestData, stateKey) {
+        const idx = stateIdx[stateKey];
+        const qData = contestData.questions[idx];
+        const questionTextEl = document.getElementById(`${contestId}-text`);
+        const counterEl = document.getElementById(`${contestId}-counter`);
+        if (questionTextEl) questionTextEl.innerText = qData.q;
+        if (counterEl) counterEl.innerText = `Вопрос ${idx+1} / ${contestData.questions.length}`;
+        clearAnswer(contestId, stateKey);
+    }
+
+    function initContestControls(contestId, contestData, stateKey) {
+        const prevBtn = document.getElementById(`${contestId}-prev`);
+        const nextBtn = document.getElementById(`${contestId}-next`);
+        const showAnswerBtn = document.getElementById(`${contestId}-show-answer`);
+
+        if (prevBtn) {
+            prevBtn.onclick = () => {
+                if (stateIdx[stateKey] > 0) {
+                    stateIdx[stateKey]--;
+                    updateContestDisplay(contestId, contestData, stateKey);
+                }
+            };
+        }
+        if (nextBtn) {
+            nextBtn.onclick = () => {
+                if (stateIdx[stateKey] < contestData.questions.length - 1) {
+                    stateIdx[stateKey]++;
+                    updateContestDisplay(contestId, contestData, stateKey);
+                }
+            };
+        }
+        if (showAnswerBtn) {
+            showAnswerBtn.onclick = () => {
+                toggleAnswer(contestId, contestData, stateKey);
+            };
+        }
+    }
+
+    function refreshCurrentContest() {
+        if (currentSlideIdx === 1) updateContestDisplay('q1', contest1, 'slide1');
+        else if (currentSlideIdx === 2) updateContestDisplay('q2', contest2, 'slide2');
+        else if (currentSlideIdx === 3) updateContestDisplay('q3', contest3, 'slide3');
+    }
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.remove('active');
+        });
+        slides[index].classList.add('active');
+        currentSlideIdx = index;
+        if (index >= 1 && index <= 3) refreshCurrentContest();
+    }
+
+    function nextContest() {
+        if (currentSlideIdx === 0) showSlide(1);
+        else if (currentSlideIdx === 1) showSlide(2);
+        else if (currentSlideIdx === 2) showSlide(3);
+        else if (currentSlideIdx === 3) showSlide(4);
+    }
+
+    function prevContest() {
+        if (currentSlideIdx === 1) showSlide(0);
+        else if (currentSlideIdx === 2) showSlide(1);
+        else if (currentSlideIdx === 3) showSlide(2);
+        else if (currentSlideIdx === 4) showSlide(3);
+    }
+
+    function bindGlobalNavigation() {
+        const nextIds = ['nextContestBtn', 'nextContestBtn2', 'nextContestBtn3'];
+        nextIds.forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) btn.onclick = (e) => { e.preventDefault(); nextContest(); };
+        });
+        const prevIds = ['prevContestBtn', 'prevContestBtn2', 'prevContestBtn3', 'backToPrevContest'];
+        prevIds.forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) btn.onclick = (e) => { e.preventDefault(); prevContest(); };
+        });
+        document.getElementById('startBtn').onclick = () => { showSlide(1); };
+        document.getElementById('restartBtn').onclick = () => {
+            stateIdx = { slide1: 0, slide2: 0, slide3: 0 };
+            answerVisible = { slide1: false, slide2: false, slide3: false };
+            updateContestDisplay('q1', contest1, 'slide1');
+            updateContestDisplay('q2', contest2, 'slide2');
+            updateContestDisplay('q3', contest3, 'slide3');
+            showSlide(0);
+        };
+    }
+
+    function initAll() {
+        initContestControls('q1', contest1, 'slide1');
+        initContestControls('q2', contest2, 'slide2');
+        initContestControls('q3', contest3, 'slide3');
+        updateContestDisplay('q1', contest1, 'slide1');
+        updateContestDisplay('q2', contest2, 'slide2');
+        updateContestDisplay('q3', contest3, 'slide3');
+        bindGlobalNavigation();
+        showSlide(0);
+    }
+
+    initAll();
+</script>
+</body>
+</html>
