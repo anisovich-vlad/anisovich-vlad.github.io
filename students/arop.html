@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Компоненты действий Анисович В.Д. - Тренажер</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="shortcut icon" href="../favicon.ico">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #E1F0FA;
+      font-family: 'Quicksand', sans-serif;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      overflow: hidden;
+    }
+
+    .trainer {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(8px);
+      width: 100%;
+      max-width: 600px;
+      height: 100%;
+      max-height: 90vh;
+      border-radius: 48px;
+      box-shadow: 0 8px 8px rgba(0,30,50,0.15);
+      padding: 16px 16px 20px;
+      display: flex;
+      flex-direction: column;
+      border: 2px solid rgba(255,255,255,0.7);
+      position: relative;
+    }
+
+    .mode-switch {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+    .mode-btn {
+      flex: 1;
+      background: #FFFFFFE0;
+      border: 2px solid white;
+      border-radius: 60px;
+      padding: 16px 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #15527A;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.05s linear;
+      touch-action: manipulation;
+    }
+    .mode-btn.active {
+      background: #FCD48C;
+      color: #1D4C6B;
+      transform: translateY(2px);
+    }
+    .mode-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 #A0BCCD;
+    }
+
+    .screen {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
+    .screen.active {
+      display: flex;
+    }
+
+    .equation-panel {
+      background: #FFFFFFDD;
+      border-radius: 48px;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-shadow: 0 3px 3px lightgray;
+      border: 2px solid white;
+      flex-shrink: 0;
+    }
+    .equation {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 3rem;
+      font-weight: 700;
+      color: #15527A;
+      flex-wrap: wrap;
+    }
+    .equation .block {
+      min-width: 80px;
+      text-align: center;
+    }
+    .equation .operator, .equation .equals {
+      font-size: 3rem;
+      font-weight: 600;
+      color: #26648B;
+    }
+
+    .variants-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      flex-shrink: 0;
+    }
+    .variant-btn {
+      background: #EDF7FF;
+      border: 3px solid white;
+      border-radius: 60px;
+      padding: 18px 8px;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #103F5C;
+      box-shadow: 0 3px 3px lightgray;
+      cursor: pointer;
+      transition: all 0.05s;
+      text-align: center;
+      touch-action: manipulation;
+    }
+    .variant-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 #A6C0D3;
+    }
+    .variant-btn.correct-pick {
+      background: #B8E0B8;
+      box-shadow: 0 2px 2px #609660;
+    }
+    .variant-btn.incorrect-pick {
+      background: #F9B5B5;
+      box-shadow: 0 2px 2px #B45F5F;
+    }
+    .variant-btn:disabled {
+      opacity: 0.8;
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #A6C0D3;
+    }
+
+    .builder-area {
+      background: #E5F0F9;
+      border-radius: 40px;
+      padding: 8px 8px;
+      margin-bottom: 10px;
+      border: 3px solid white;
+      box-shadow: inset 0 2px 2px #B0C8DA;
+      flex-shrink: 0;
+    }
+    .expression-builder {
+      background: white;
+      border-radius: 30px;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #1B4B6F;
+      text-align: center;
+      letter-spacing: 4px;
+      border: 2px solid #CDE3F2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      word-break: break-word;
+      min-height: 60px;
+    }
+    .expression-builder span {
+      display: inline-block;
+      margin: 0 2px;
+    }
+    .toolbox {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      background: #DAEAF5;
+      border-radius: 60px;
+      padding: 10px;
+      border: 3px solid white;
+      flex-shrink: 0;
+    }
+    .tool-btn {
+      background: #FFFFFF;
+      border: 2px solid white;
+      border-radius: 50px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      min-width: 60px;
+      padding: 6px;
+      color: #15455E;
+      box-shadow: 0 2px 2px #9CB6C9;
+      cursor: pointer;
+      touch-action: manipulation;
+      text-align: center;
+      flex: 0 1 auto;
+    }
+    .tool-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 #9CB6C9;
+    }
+    .builder-controls {
+      display: flex;
+      gap: 15px;
+      margin: 10px 0 0;
+      flex-shrink: 0;
+    }
+    .action-btn {
+      background: #F9D37C;
+      border: 3px solid white;
+      border-radius: 50px;
+      padding: 8px 0;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #254E6B;
+      cursor: pointer;
+      touch-action: manipulation;
+      text-align: center;
+      flex: 1;
+    }
+    .action-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 #B8883A;
+    }
+    .action-btn:disabled {
+      opacity: 0.5;
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #B8883A;
+      pointer-events: none;
+    }
+
+    /* Footer со статистикой и кнопкой истории */
+    .footer {
+      background: #FFFFFFCC;
+      border-radius: 40px;
+      padding: 6px;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 2px solid white;
+      flex-shrink: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .footer-item {
+      background: #f7fbfe;
+      padding: 10px;
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #1A4C6C;
+    }
+    .footer-item .label {
+      font-size: 1rem;
+    }
+    .footer-item .value {
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+    .correct-answer {
+      background: #a2fc8c;
+      flex: 2;
+      justify-content: center;
+    }
+    .correct-answer .value {
+      color: #1A4C6C;
+      font-size: 1rem;
+      word-break: break-word;
+      text-align: center;
+    }
+    .history-btn {
+      background: #FCD48C;
+      cursor: pointer;
+      transition: 0.05s linear;
+    }
+    .history-btn:active {
+      transform: translateY(4px);
+    }
+
+    /* Панель истории */
+    .history-panel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255,255,255,0.98);
+      backdrop-filter: blur(4px);
+      border-radius: 48px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+      overflow: hidden;
+    }
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-shrink: 0;
+    }
+    .history-header h3 {
+      font-size: 1.8rem;
+      color: #15527A;
+    }
+    .history-actions {
+      display: flex;
+      gap: 12px;
+    }
+    .history-clear {
+      background: #FFB5B5;
+      border: none;
+      border-radius: 60px;
+      padding: 8px 16px;
+      font-weight: bold;
+      color: #7A2E2E;
+      cursor: pointer;
+    }
+    .history-close {
+      background: #FCD48C;
+      border: none;
+      border-radius: 60px;
+      padding: 8px 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .history-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-right: 6px;
+    }
+    .history-item {
+      background: #F0F7FC;
+      border-radius: 32px;
+      padding: 12px;
+      border-left: 8px solid;
+    }
+    .history-item.correct {
+      border-left-color: #4be764;
+    }
+    .history-item.wrong {
+      border-left-color: #ff4444;
+    }
+    .history-question {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #103F5C;
+      margin-bottom: 6px;
+    }
+    .history-detail {
+      font-size: 0.9rem;
+      color: #2c5a7a;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .history-user {
+      font-weight: 600;
+    }
+    .history-correct-ans {
+      color: #2b7e06;
+    }
+    .history-status {
+      font-weight: bold;
+    }
+
+    .rightscore {
+      color: #2b7e06;
+    }
+    .wrongscore {
+      color: #af0202;
+    }
+
+    @media (max-width: 480px) {
+      .footer-item { padding: 4px 8px; }
+      .footer-item .label { font-size: 0.7rem; }
+      .footer-item .value { font-size: 1rem; }
+      .correct-answer .value { font-size: 0.85rem; }
+      .tool-btn { min-width: 55px; font-size: 1.2rem; }
+      .history-header h3 { font-size: 1.4rem; }
+      .history-actions button { padding: 4px 12px; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="trainer">
+  <div class="mode-switch">
+    <div class="mode-btn active" data-mode="names">📛 Названия</div>
+    <div class="mode-btn" data-mode="build">🔧 Сборка</div>
+  </div>
+
+  <!-- Экран 1: названия -->
+  <div class="screen active" id="namesScreen">
+    <div class="equation-panel">
+      <div class="equation" id="namesEquation"></div>
+    </div>
+    <div class="variants-grid" id="namesVariants"></div>
+    <div class="footer" id="namesFooter">
+      <div class="footer-item rightscore">
+        <span class="label">✅:</span>
+        <span class="value" id="namesScore">0</span>
+      </div>
+      <div class="footer-item wrongscore">
+        <span class="label">❌:</span>
+        <span class="value" id="namesErrors">0</span>
+      </div>
+      <div class="footer-item correct-answer">
+        <span class="label">⭐ Правильный ответ:</span>
+        <span class="value" id="namesCorrectAnswer">—</span>
+      </div>
+      <div class="footer-item history-btn" id="namesHistoryBtn">📜 История</div>
+    </div>
+  </div>
+
+  <!-- Экран 2: сборка -->
+  <div class="screen" id="buildScreen">
+    <div class="equation-panel">
+      <div class="equation" id="buildEquation"></div>
+    </div>
+    <div class="builder-area">
+      <div class="expression-builder" id="buildExpression">x =</div>
+    </div>
+    <div class="toolbox" id="toolbox"></div>
+    <div class="builder-controls">
+      <button class="action-btn" id="clearBuildBtn">❌ Сброс</button>
+      <button class="action-btn" id="checkBuildBtn">✅ Проверить</button>
+    </div>
+    <div class="footer" id="buildFooter">
+      <div class="footer-item rightscore">
+        <span class="label">✅:</span>
+        <span class="value" id="buildScore">0</span>
+      </div>
+      <div class="footer-item wrongscore">
+        <span class="label">❌:</span>
+        <span class="value" id="buildErrors">0</span>
+      </div>
+      <div class="footer-item correct-answer">
+        <span class="label">⭐ Правильный ответ:</span>
+        <span class="value" id="buildCorrectAnswer">—</span>
+      </div>
+      <div class="footer-item history-btn" id="buildHistoryBtn">📜 История</div>
+    </div>
+  </div>
+
+  <!-- Панель истории (общая, динамически заполняется) -->
+  <div id="historyPanel" class="history-panel" style="display: none;">
+    <div class="history-header">
+      <h3>📋 История</h3>
+      <div class="history-actions">
+        <button class="history-clear" id="clearHistoryBtn">🗑️ Очистить</button>
+        <button class="history-close" id="closeHistoryBtn">✖️ Закрыть</button>
+      </div>
+    </div>
+    <div class="history-list" id="historyList">
+      <!-- записи будут добавляться сюда -->
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    // Состояние
+    let namesScore = 0;
+    let namesErrors = 0;
+    let buildScore = 0;
+    let buildErrors = 0;
+    let currentNamesQuestion = null;
+    let currentBuildQuestion = null;
+    let buildCurrentExpr = ['x', '='];        // всегда начинается с x =
+    let buildAnswerLock = false;
+
+    // История: для каждого режима храним массив записей
+    let namesHistory = [];   // каждый объект: { equationText, userAnswer, correctAnswer, isCorrect }
+    let buildHistory = [];   // { equationText, userAnswer, correctAnswer, isCorrect }
+
+    // Текущий активный режим ('names' или 'build')
+    let currentMode = 'names';
+
+    // Элементы
+    const modeBtns = document.querySelectorAll('.mode-btn');
+    const namesScreen = document.getElementById('namesScreen');
+    const buildScreen = document.getElementById('buildScreen');
+    const namesEquationDiv = document.getElementById('namesEquation');
+    const namesVariantsDiv = document.getElementById('namesVariants');
+    const namesScoreSpan = document.getElementById('namesScore');
+    const namesErrorsSpan = document.getElementById('namesErrors');
+    const namesCorrectAnswerSpan = document.getElementById('namesCorrectAnswer');
+    const buildEquationDiv = document.getElementById('buildEquation');
+    const buildExpressionDiv = document.getElementById('buildExpression');
+    const toolboxDiv = document.getElementById('toolbox');
+    const buildScoreSpan = document.getElementById('buildScore');
+    const buildErrorsSpan = document.getElementById('buildErrors');
+    const buildCorrectAnswerSpan = document.getElementById('buildCorrectAnswer');
+    const clearBuildBtn = document.getElementById('clearBuildBtn');
+    const checkBuildBtn = document.getElementById('checkBuildBtn');
+    const namesHistoryBtn = document.getElementById('namesHistoryBtn');
+    const buildHistoryBtn = document.getElementById('buildHistoryBtn');
+    const historyPanel = document.getElementById('historyPanel');
+    const historyListDiv = document.getElementById('historyList');
+    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+    const closeHistoryBtn = document.getElementById('closeHistoryBtn');
+
+    // ---------- Вспомогательные функции для истории ----------
+    function addNamesHistory(equationText, userAnswer, correctAnswer, isCorrect) {
+      namesHistory.push({ equationText, userAnswer, correctAnswer, isCorrect });
+    }
+
+    function addBuildHistory(equationText, userAnswer, correctAnswer, isCorrect) {
+      buildHistory.push({ equationText, userAnswer, correctAnswer, isCorrect });
+    }
+
+    function renderHistory() {
+      const history = (currentMode === 'names') ? namesHistory : buildHistory;
+      historyListDiv.innerHTML = '';
+      if (history.length === 0) {
+        historyListDiv.innerHTML = '<div style="text-align:center; padding:20px;">Пока нет записей. Решай примеры!</div>';
+        return;
+      }
+      // Показываем в обратном порядке (сначала последние)
+      [...history].reverse().forEach(entry => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = `history-item ${entry.isCorrect ? 'correct' : 'wrong'}`;
+        itemDiv.innerHTML = `
+          <div class="history-question">${entry.equationText}</div>
+          <div class="history-detail">
+            <span>📝 Твой ответ: <span class="history-user">${entry.userAnswer}</span></span>
+            <span>✔️ Правильно: <span class="history-correct-ans">${entry.correctAnswer}</span></span>
+            <span class="history-status">${entry.isCorrect ? '✅ Верно' : '❌ Неверно'}</span>
+          </div>
+        `;
+        historyListDiv.appendChild(itemDiv);
+      });
+    }
+
+    function clearHistory() {
+      if (currentMode === 'names') {
+        namesHistory = [];
+      } else {
+        buildHistory = [];
+      }
+      renderHistory();
+    }
+
+    function showHistory() {
+      renderHistory();
+      historyPanel.style.display = 'flex';
+    }
+
+    function hideHistory() {
+      historyPanel.style.display = 'none';
+    }
+
+    // ---------- Названия ----------
+    function generateNamesQuestion() {
+      const type = randomInt(0, 3);
+      let left, right, operator, result, unknownPos, correctName;
+      const operators = ['+', '-', '·', '÷'];
+      const namesMap = {
+        '+': ['слагаемое', 'слагаемое', 'сумма'],
+        '-': ['уменьшаемое', 'вычитаемое', 'разность'],
+        '·': ['множитель', 'множитель', 'произведение'],
+        '÷': ['делимое', 'делитель', 'частное']
+      };
+      operator = operators[type];
+      const names = namesMap[operator];
+      unknownPos = randomInt(0, 2);
+      let a, b, c;
+      switch (operator) {
+        case '+': a = randomInt(2,12); b = randomInt(2,12); c = a+b; break;
+        case '-': c = randomInt(5,15); b = randomInt(2,c-2); a = c+b; break;
+        case '·': a = randomInt(2,5); b = randomInt(2,5); c = a*b; break;
+        case '÷': b = randomInt(2,5); c = randomInt(2,5); a = b*c; break;
+      }
+      if (unknownPos === 0) { left = 'x'; right = b; result = c; correctName = names[0]; }
+      else if (unknownPos === 1) { left = a; right = 'x'; result = c; correctName = names[1]; }
+      else { left = a; right = b; result = 'x'; correctName = names[2]; }
+
+      let allNames = [...new Set([...names, 'множитель', 'делитель', 'сумма', 'разность', 'произведение', 'частное', 'уменьшаемое', 'вычитаемое', 'делимое'])];
+      let variants = [correctName];
+      while (variants.length < 4) {
+        let cand = allNames[randomInt(0, allNames.length-1)];
+        if (!variants.includes(cand)) variants.push(cand);
+      }
+      variants = variants.sort(() => Math.random() - 0.5);
+      // Сохраняем текстовое представление уравнения для истории
+      const equationText = `${left} ${operator} ${right} = ${result}`;
+      return { left, right, operator, result, unknownPos, correctName, variants, equationText };
+    }
+
+    function renderNamesQuestion() {
+      const q = currentNamesQuestion;
+      namesEquationDiv.innerHTML = `
+        <span class="block">${q.left}</span>
+        <span class="operator">${q.operator}</span>
+        <span class="block">${q.right}</span>
+        <span class="equals">=</span>
+        <span class="block">${q.result}</span>
+      `;
+      namesVariantsDiv.innerHTML = '';
+      q.variants.forEach(name => {
+        const btn = document.createElement('button');
+        btn.className = 'variant-btn';
+        btn.textContent = name;
+        btn.dataset.name = name;
+        btn.addEventListener('click', namesVariantHandler);
+        namesVariantsDiv.appendChild(btn);
+      });
+      document.querySelectorAll('#namesVariants .variant-btn').forEach(btn => {
+        btn.disabled = false;
+        btn.classList.remove('correct-pick', 'incorrect-pick');
+      });
+      namesCorrectAnswerSpan.textContent = '—';
+    }
+
+    function namesVariantHandler(e) {
+      const btn = e.currentTarget;
+      if (btn.disabled) return;
+      const selected = btn.dataset.name;
+      const correct = currentNamesQuestion.correctName;
+      document.querySelectorAll('#namesVariants .variant-btn').forEach(b => b.disabled = true);
+
+      const isCorrect = (selected === correct);
+      if (isCorrect) {
+        btn.classList.add('correct-pick');
+        namesScore++;
+      } else {
+        btn.classList.add('incorrect-pick');
+        namesErrors++;
+        document.querySelectorAll('#namesVariants .variant-btn').forEach(b => {
+          if (b.dataset.name === correct) b.classList.add('correct-pick');
+        });
+      }
+      namesScoreSpan.textContent = namesScore;
+      namesErrorsSpan.textContent = namesErrors;
+      namesCorrectAnswerSpan.textContent = correct;
+
+      // Сохраняем в историю
+      addNamesHistory(currentNamesQuestion.equationText, selected, correct, isCorrect);
+
+      setTimeout(() => {
+        currentNamesQuestion = generateNamesQuestion();
+        renderNamesQuestion();
+      }, 1000);
+    }
+
+    // ---------- Сборка ----------
+    function generateBuildQuestion() {
+      const type = randomInt(0, 3);
+      let left, right, operator, result, unknownPos, correctExpr;
+      const operators = ['+', '-', '·', '÷'];
+      operator = operators[type];
+      unknownPos = randomInt(0, 1);
+      let a, b, c;
+      switch (operator) {
+        case '+': a = randomInt(2,12); b = randomInt(2,12); c = a+b; break;
+        case '-': c = randomInt(5,15); b = randomInt(2,c-2); a = c+b; break;
+        case '·': a = randomInt(2,5); b = randomInt(2,5); c = a*b; break;
+        case '÷': b = randomInt(2,5); c = randomInt(2,5); a = b*c; break;
+      }
+
+      let num1, num2;
+      if (unknownPos === 0) {
+        left = 'x'; right = b; result = c;
+        num1 = b; num2 = c;
+      } else {
+        left = a; right = 'x'; result = c;
+        num1 = a; num2 = c;
+      }
+
+      if (unknownPos === 0) {
+        if (operator === '+') correctExpr = `x = ${c} - ${b}`;
+        else if (operator === '-') correctExpr = `x = ${c} + ${b}`;
+        else if (operator === '·') correctExpr = `x = ${c} ÷ ${b}`;
+        else if (operator === '÷') correctExpr = `x = ${c} · ${b}`;
+      } else {
+        if (operator === '+') correctExpr = `x = ${c} - ${a}`;
+        else if (operator === '-') correctExpr = `x = ${a} - ${c}`;
+        else if (operator === '·') correctExpr = `x = ${c} ÷ ${a}`;
+        else if (operator === '÷') correctExpr = `x = ${a} · ${c}`;
+      }
+
+      const uniqueNumbers = [...new Set([num1, num2])];
+      const equationText = `${left} ${operator} ${right} = ${result}`;
+      return { left, right, operator, result, unknownPos, correctExpr, numbers: uniqueNumbers, equationText };
+    }
+
+    function updateToolbox(numbers) {
+      toolboxDiv.innerHTML = '';
+      numbers.forEach(num => {
+        const btn = document.createElement('div');
+        btn.className = 'tool-btn';
+        btn.textContent = num;
+        btn.dataset.tool = num.toString();
+        btn.addEventListener('click', (e) => {
+          if (buildAnswerLock) return;
+          buildCurrentExpr.push(e.currentTarget.dataset.tool);
+          renderBuildExpression();
+        });
+        toolboxDiv.appendChild(btn);
+      });
+      const signs = ['+', '-', '·', '÷'];
+      signs.forEach(sign => {
+        const btn = document.createElement('div');
+        btn.className = 'tool-btn';
+        btn.textContent = sign;
+        btn.dataset.tool = sign;
+        btn.addEventListener('click', (e) => {
+          if (buildAnswerLock) return;
+          buildCurrentExpr.push(e.currentTarget.dataset.tool);
+          renderBuildExpression();
+        });
+        toolboxDiv.appendChild(btn);
+      });
+    }
+
+    function renderBuildQuestion() {
+      const q = currentBuildQuestion;
+      buildEquationDiv.innerHTML = `
+        <span class="block">${q.left}</span>
+        <span class="operator">${q.operator}</span>
+        <span class="block">${q.right}</span>
+        <span class="equals">=</span>
+        <span class="block">${q.result}</span>
+      `;
+      buildCurrentExpr = ['x', '='];
+      buildAnswerLock = false;
+      renderBuildExpression();
+      updateToolbox(q.numbers);
+      document.querySelectorAll('.tool-btn').forEach(btn => btn.disabled = false);
+      checkBuildBtn.disabled = false;
+      clearBuildBtn.disabled = false;
+      buildCorrectAnswerSpan.textContent = '—';
+    }
+
+    function renderBuildExpression() {
+      buildExpressionDiv.innerHTML = buildCurrentExpr.map(t => `<span>${t}</span>`).join(' ');
+    }
+
+    clearBuildBtn.addEventListener('click', () => {
+      if (buildAnswerLock) return;
+      buildCurrentExpr = ['x', '='];
+      renderBuildExpression();
+    });
+
+    checkBuildBtn.addEventListener('click', () => {
+      if (buildAnswerLock) return;
+      const userExpr = buildCurrentExpr.join('').replace(/\s+/g, '');
+      const correct = currentBuildQuestion.correctExpr.replace(/\s+/g, '');
+      const userNorm = userExpr;
+      const correctNorm = correct;
+
+      buildAnswerLock = true;
+      document.querySelectorAll('.tool-btn').forEach(btn => btn.disabled = true);
+      checkBuildBtn.disabled = true;
+      clearBuildBtn.disabled = true;
+
+      const isCorrect = (userNorm === correctNorm);
+      if (isCorrect) {
+        buildScore++;
+      } else {
+        buildErrors++;
+      }
+      buildScoreSpan.textContent = buildScore;
+      buildErrorsSpan.textContent = buildErrors;
+      buildCorrectAnswerSpan.textContent = currentBuildQuestion.correctExpr;
+
+      // Сохраняем в историю сборки
+      addBuildHistory(currentBuildQuestion.equationText, userNorm, correctNorm, isCorrect);
+
+      setTimeout(() => {
+        currentBuildQuestion = generateBuildQuestion();
+        renderBuildQuestion();
+      }, 1500);
+    });
+
+    // ---------- Переключение режимов ----------
+    modeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        modeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const mode = btn.dataset.mode;
+        currentMode = mode;
+        if (mode === 'names') {
+          namesScreen.classList.add('active');
+          buildScreen.classList.remove('active');
+        } else {
+          namesScreen.classList.remove('active');
+          buildScreen.classList.add('active');
+          if (!currentBuildQuestion) {
+            currentBuildQuestion = generateBuildQuestion();
+          }
+          renderBuildQuestion();
+        }
+        // Если панель истории открыта – закрываем при смене режима
+        if (historyPanel.style.display === 'flex') hideHistory();
+      });
+    });
+
+    // ---------- Кнопки истории ----------
+    namesHistoryBtn.addEventListener('click', () => {
+      if (currentMode !== 'names') return;
+      showHistory();
+    });
+    buildHistoryBtn.addEventListener('click', () => {
+      if (currentMode !== 'build') return;
+      showHistory();
+    });
+    clearHistoryBtn.addEventListener('click', () => {
+      clearHistory();
+    });
+    closeHistoryBtn.addEventListener('click', () => {
+      hideHistory();
+    });
+
+    // ---------- Инициализация ----------
+    function init() {
+      currentNamesQuestion = generateNamesQuestion();
+      renderNamesQuestion();
+      currentBuildQuestion = generateBuildQuestion();
+      renderBuildQuestion();
+      namesScoreSpan.textContent = '0';
+      namesErrorsSpan.textContent = '0';
+      buildScoreSpan.textContent = '0';
+      buildErrorsSpan.textContent = '0';
+    }
+    init();
+  })();
+</script>
+</body>
+</html>
