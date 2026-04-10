@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Таблица умножения — тренажёр (стиль «Ломаные»)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="../favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #EFF6FC;
+            font-family: 'Quicksand', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .trainer-card {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 48px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+            padding: 24px 20px 28px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e2ecf5;
+            position: relative;
+            transition: filter 0.3s;
+        }
+
+        body.modal-open .trainer-card {
+            filter: blur(2px) brightness(0.9);
+            pointer-events: none;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .title h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: #2c5a7a;
+            letter-spacing: -0.3px;
+        }
+        .title p {
+            color: #5d8aa8;
+            font-size: 0.9rem;
+        }
+
+        /* Карточка с примером */
+        .card-wrapper {
+            perspective: 1500px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 15px;
+        }
+        .card {
+            position: relative;
+            width: 100%;
+            margin: 0 auto;
+            transition: transform 0.5s ease;
+            transform-style: preserve-3d;
+            border-radius: 40px;
+            aspect-ratio: 4/3;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        .front, .back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            font-weight: 700;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .front {
+            background: #F8FCFE;
+            color: #2c5a7a;
+            border: 2px solid #e6f0f8;
+        }
+        .back {
+            background: #d9e3f0;
+            color: #2c5a7a;
+            transform: rotateY(180deg);
+            border: 2px solid #cbdbe0;
+        }
+
+        /* Панель статистики и кнопок */
+        .stats-panel {
+            background: #F0F7FC;
+            border-radius: 60px;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .stats {
+            display: flex;
+            gap: 20px;
+        }
+        .stat {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+        .stat .value {
+            font-weight: 800;
+            font-size: 1.8rem;
+        }
+        .correct { color: #4be764; }
+        .wrong { color: #ff4444; }
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .ctrl-btn {
+            background: #FFFFFFCC;
+            border: none;
+            border-radius: 60px;
+            padding: 8px 20px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c5a7a;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            font-family: inherit;
+        }
+        .ctrl-btn:active {
+            transform: translateY(3px);
+        }
+        .ctrl-btn.active {
+            background: #FCD48C;
+            color: #1D4C6B;
+        }
+
+        /* Блок ответов */
+        .answer-area {
+            margin: 10px 0 5px;
+        }
+        .options-grid {
+            display: grid;
+            gap: 15px;
+        }
+        .option-btn {
+            background: #EDF7FF;
+            border: 2px solid white;
+            border-radius: 60px;
+            padding: 18px 8px;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #103F5C;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.1s;
+            font-family: inherit;
+        }
+        .option-btn:active {
+            transform: translateY(3px);
+        }
+        .option-btn.disabled {
+            opacity: 0.6;
+            pointer-events: none;
+            transform: none;
+        }
+        .input-area {
+            display: grid;
+            gap: 12px;
+            align-items: center;
+        }
+        #answerInput {
+            box-sizing: border-box;
+            padding: 16px 20px;
+            width: 100%;
+            font-size: 2rem;
+            border: 2px solid #e2ecf5;
+            border-radius: 60px;
+            font-family: inherit;
+            text-align: center;
+            background: white;
+            color: #2c5a7a;
+            font-weight: 600;
+            outline: none;
+        }
+        #submitAnswer {
+            background: #FFE5B4;
+            border: none;
+            border-radius: 60px;
+            padding: 16px 24px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #b17a42;
+            cursor: pointer;
+            font-family: inherit;
+            flex-shrink: 0;
+        }
+        #submitAnswer:active {
+            transform: translateY(3px);
+        }
+        .disabled-input {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* Панель истории (модальное окно) */
+        .history-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.2s, opacity 0.2s;
+        }
+        .history-modal.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+        .history-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            border-radius: 48px;
+            overflow-y: auto;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2ecf5;
+            padding-bottom: 12px;
+        }
+        .history-header h3 {
+            font-size: 1.8rem;
+            color: #2c5a7a;
+        }
+        .close-modal {
+            background: #FFE5B4;
+            border: none;
+            border-radius: 60px;
+            padding: 6px 16px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #b17a42;
+            cursor: pointer;
+        }
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .history-item {
+            background: #F8FCFE;
+            border-radius: 32px;
+            padding: 12px;
+            border-left: 8px solid;
+        }
+        .history-item.correct {
+            border-left-color: #4be764;
+        }
+        .history-item.wrong {
+            border-left-color: #ff4444;
+        }
+        .history-question {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #103F5C;
+            margin-bottom: 6px;
+        }
+        .history-detail {
+            font-size: 0.9rem;
+            color: #2c5a7a;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .history-user {
+            font-weight: 600;
+        }
+        .history-correct-ans {
+            color: #2b7e06;
+        }
+
+        @media (max-width: 480px) {
+            .trainer-card { padding: 18px 16px; }
+            .front, .back { font-size: 2.5rem; }
+            .option-btn { font-size: 1.4rem; padding: 12px; }
+            .ctrl-btn { padding: 6px 12px; font-size: 1rem; }
+            .stat .value { font-size: 1.4rem; }
+            #answerInput { font-size: 1.4rem; padding: 12px; }
+            #submitAnswer { padding: 12px 18px; }
+        }
+    </style>
+</head>
+<body>
+<div class="trainer-card">
+    <div class="title">
+        <h1>Таблица умножения</h1>
+    </div>
+
+    <!-- Карточка с примером -->
+    <div class="card-wrapper" id="cardWrapper">
+        <div class="card" id="card">
+            <div class="front" id="questionDisplay">2 × 2</div>
+            <div class="back" id="answerDisplay">4</div>
+        </div>
+        <!-- Контейнер для ответов -->
+        <div id="answerContainer" class="answer-area"></div>
+    </div>
+
+
+
+    <!-- Статистика и управление -->
+    <div class="stats-panel">
+        <div class="stats">
+            <div class="stat correct">
+                <span>✅</span>
+                <span class="value" id="correctCount">0</span>
+            </div>
+            <div class="stat wrong">
+                <span>❌</span>
+                <span class="value" id="wrongCount">0</span>
+            </div>
+        </div>
+        <div class="control-buttons">
+            <button class="ctrl-btn" id="timerBtn" title="Авто-смена (7 сек)">⏳</button>
+            <button class="ctrl-btn" id="modeBtn" title="Режим: младенец">👶</button>
+            <button class="ctrl-btn" id="historyBtn">📜 История</button>
+        </div>
+    </div>
+
+
+</div>
+
+<!-- Модальное окно истории -->
+<div id="historyModal" class="history-modal">
+    <div class="history-content">
+        <div class="history-header">
+            <h3>📋 История ответов</h3>
+            <button class="close-modal" id="closeHistoryBtn">Закрыть</button>
+        </div>
+        <div class="history-list" id="historyList">
+            <div style="text-align:center; padding:20px;">Пока нет записей</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // --- DOM элементы ---
+        const card = document.getElementById('card');
+        const questionDisplay = document.getElementById('questionDisplay');
+        const answerDisplay = document.getElementById('answerDisplay');
+        const correctSpan = document.getElementById('correctCount');
+        const wrongSpan = document.getElementById('wrongCount');
+        const timerBtn = document.getElementById('timerBtn');
+        const modeBtn = document.getElementById('modeBtn');
+        const answerContainer = document.getElementById('answerContainer');
+        const historyModal = document.getElementById('historyModal');
+        const closeHistoryBtn = document.getElementById('closeHistoryBtn');
+        const historyListDiv = document.getElementById('historyList');
+
+        // --- Состояние ---
+        let currentQuestion = { a: 2, b: 2, answer: 4 };
+        let options = [];
+        let canSelect = true;
+        let nextTimer = null;
+        let autoTimer = null;
+        let autoMode = false;
+        let babyMode = true;       // true = кнопки, false = ввод
+
+        let correct = 0, wrong = 0;
+        let history = [];          // каждый элемент: { text, userAnswer, correctAnswer, isCorrect }
+
+        // --- Вспомогательные ---
+        const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+        function generateQuestion() {
+            const a = random(2, 9);
+            const b = random(2, 9);
+            return { a, b, answer: a * b };
+        }
+
+        function generateOptions(correctAns) {
+            const opts = new Set();
+            opts.add(correctAns);
+            while (opts.size < 3) {
+                opts.add(random(4, 81));
+            }
+            return Array.from(opts).sort(() => Math.random() - 0.5);
+        }
+
+        function updateCardDisplay() {
+            questionDisplay.textContent = `${currentQuestion.a} × ${currentQuestion.b}`;
+            answerDisplay.textContent = currentQuestion.answer;
+        }
+
+        // --- Таймеры ---
+        function clearNextTimer() {
+            if (nextTimer) { clearTimeout(nextTimer); nextTimer = null; }
+        }
+        function clearAutoTimer() {
+            if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+        }
+
+        function startAutoTimer() {
+            clearAutoTimer();
+            if (autoMode && canSelect) {
+                autoTimer = setTimeout(() => {
+                    if (!canSelect) return;
+                    wrong++;
+                    wrongSpan.textContent = wrong;
+                    // запись в историю (автоматическая ошибка)
+                    addToHistory(`${currentQuestion.a} × ${currentQuestion.b}`, 'тайм-аут', currentQuestion.answer, false);
+                    canSelect = false;
+                    card.classList.add('flipped');
+                    disableInputs(true);
+                    clearNextTimer();
+                    nextTimer = setTimeout(() => {
+                        flipAndUpdate();
+                    }, 1000);
+                }, 7000);
+            }
+        }
+
+        function disableInputs(disabled) {
+            if (babyMode) {
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    if (disabled) btn.classList.add('disabled');
+                    else btn.classList.remove('disabled');
+                });
+            } else {
+                const input = document.getElementById('answerInput');
+                const submit = document.getElementById('submitAnswer');
+                if (input) {
+                    if (disabled) {
+                        input.classList.add('disabled-input');
+                        submit.classList.add('disabled-input');
+                    } else {
+                        input.classList.remove('disabled-input');
+                        submit.classList.remove('disabled-input');
+                        input.focus();
+                    }
+                }
+            }
+        }
+
+        function flipAndUpdate() {
+            clearNextTimer();
+            clearAutoTimer();
+            card.classList.remove('flipped');
+            const onTransitionEnd = () => {
+                currentQuestion = generateQuestion();
+                options = generateOptions(currentQuestion.answer);
+                updateCardDisplay();
+                renderAnswerInterface();
+                canSelect = true;
+                disableInputs(false);
+                startAutoTimer();
+                card.removeEventListener('transitionend', onTransitionEnd);
+            };
+            card.addEventListener('transitionend', onTransitionEnd, { once: true });
+        }
+
+        // --- История ---
+        function addToHistory(questionText, userAnswer, correctAnswer, isCorrect) {
+            history.push({ questionText, userAnswer, correctAnswer, isCorrect });
+            // ограничим историю 50 записями
+            if (history.length > 50) history.shift();
+        }
+
+        function renderHistory() {
+            historyListDiv.innerHTML = '';
+            if (history.length === 0) {
+                historyListDiv.innerHTML = '<div style="text-align:center; padding:20px;">Пока нет записей. Решай примеры!</div>';
+                return;
+            }
+            [...history].reverse().forEach(entry => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `history-item ${entry.isCorrect ? 'correct' : 'wrong'}`;
+                itemDiv.innerHTML = `
+                    <div class="history-question">${entry.questionText} = ?</div>
+                    <div class="history-detail">
+                        <span>📝 Твой ответ: <span class="history-user">${entry.userAnswer}</span></span>
+                        <span>✔️ Правильно: <span class="history-correct-ans">${entry.correctAnswer}</span></span>
+                        <span>${entry.isCorrect ? '✅ Верно' : '❌ Неверно'}</span>
+                    </div>
+                `;
+                historyListDiv.appendChild(itemDiv);
+            });
+        }
+
+        function showHistory() {
+            renderHistory();
+            historyModal.classList.add('visible');
+            document.body.classList.add('modal-open');
+            clearAutoTimer();   // пауза авто-таймера
+        }
+
+        function hideHistory() {
+            historyModal.classList.remove('visible');
+            document.body.classList.remove('modal-open');
+            startAutoTimer();   // возобновляем
+        }
+
+        // --- Обработка ответа ---
+        function handleAnswer(isCorrect, userValue) {
+            if (!canSelect) return;
+            clearAutoTimer();
+            if (isCorrect) {
+                correct++;
+                correctSpan.textContent = correct;
+            } else {
+                wrong++;
+                wrongSpan.textContent = wrong;
+            }
+            addToHistory(`${currentQuestion.a} × ${currentQuestion.b}`, userValue, currentQuestion.answer, isCorrect);
+            canSelect = false;
+            card.classList.add('flipped');
+            disableInputs(true);
+            clearNextTimer();
+            nextTimer = setTimeout(() => {
+                flipAndUpdate();
+            }, 1000);
+        }
+
+        // --- Рендер интерфейса (кнопки или ввод) ---
+        function renderAnswerInterface() {
+            answerContainer.innerHTML = '';
+            if (babyMode) {
+                const grid = document.createElement('div');
+                grid.className = 'options-grid';
+                options.forEach(num => {
+                    const btn = document.createElement('button');
+                    btn.className = `option-btn ${!canSelect ? 'disabled' : ''}`;
+                    btn.textContent = num;
+                    btn.addEventListener('click', () => {
+                        if (!canSelect) return;
+                        handleAnswer(num === currentQuestion.answer, num);
+                    });
+                    grid.appendChild(btn);
+                });
+                answerContainer.appendChild(grid);
+            } else {
+                const inputArea = document.createElement('div');
+                inputArea.className = 'input-area';
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.id = 'answerInput';
+                input.placeholder = '?';
+                input.classList.toggle('disabled-input', !canSelect);
+                const submit = document.createElement('button');
+                submit.id = 'submitAnswer';
+                submit.textContent = 'Проверить';
+                submit.classList.toggle('disabled-input', !canSelect);
+                inputArea.appendChild(input);
+                inputArea.appendChild(submit);
+                answerContainer.appendChild(inputArea);
+
+                const answerHandler = () => {
+                    if (!canSelect) return;
+                    const val = parseInt(input.value, 10);
+                    if (isNaN(val)) return;
+                    handleAnswer(val === currentQuestion.answer, val);
+                    input.value = '';
+                };
+                submit.addEventListener('click', answerHandler);
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        answerHandler();
+                    }
+                });
+                if (canSelect) input.focus();
+            }
+        }
+
+        // --- Переключение режимов ---
+        function toggleMode() {
+            babyMode = !babyMode;
+            modeBtn.textContent = babyMode ? '👶' : '👨';
+            // сброс статистики и истории при смене режима (по желанию)
+            correct = 0; wrong = 0;
+            correctSpan.textContent = correct;
+            wrongSpan.textContent = wrong;
+            history = [];
+            clearNextTimer();
+            clearAutoTimer();
+            currentQuestion = generateQuestion();
+            options = generateOptions(currentQuestion.answer);
+            updateCardDisplay();
+            card.classList.remove('flipped');
+            canSelect = true;
+            renderAnswerInterface();
+            startAutoTimer();
+        }
+
+        function toggleAutoMode() {
+            autoMode = !autoMode;
+            timerBtn.classList.toggle('active', autoMode);
+            if (autoMode) {
+                startAutoTimer();
+            } else {
+                clearAutoTimer();
+            }
+        }
+
+        // --- Клик по карточке = ошибка ---
+        document.getElementById('cardWrapper').addEventListener('click', (e) => {
+            if (!e.target.closest('.card')) return;
+            if (!canSelect) return;
+            handleAnswer(false, '❌ (клик)');
+        });
+
+        // --- Инициализация и кнопки ---
+        currentQuestion = generateQuestion();
+        options = generateOptions(currentQuestion.answer);
+        updateCardDisplay();
+        renderAnswerInterface();
+
+        timerBtn.addEventListener('click', toggleAutoMode);
+        modeBtn.addEventListener('click', toggleMode);
+        const historyBtn = document.getElementById('historyBtn');
+        historyBtn.addEventListener('click', showHistory);
+        closeHistoryBtn.addEventListener('click', hideHistory);
+        historyModal.addEventListener('click', (e) => {
+            if (e.target === historyModal) hideHistory();
+        });
+
+        // Стартовое состояние
+        timerBtn.classList.toggle('active', autoMode);
+        modeBtn.textContent = babyMode ? '👶' : '👨';
+    })();
+</script>
+</body>
+</html>
