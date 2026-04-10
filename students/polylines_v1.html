@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Ломаные линии — тренажёр</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="../favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #EFF6FC;
+            font-family: 'Quicksand', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .trainer-card {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 48px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e2ecf5;
+            height: auto;
+            max-height: 95vh;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .title h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: #2c5a7a;
+            letter-spacing: -0.3px;
+        }
+        .title p {
+            color: #5d8aa8;
+            font-size: 0.9rem;
+        }
+
+        /* SVG контейнер */
+        .svg-container {
+            width: 60%;
+            background: #F8FCFE;
+            border-radius: 32px;
+            padding: 20px 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid #e6f0f8;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.02), 0 4px 10px rgba(0,0,0,0.02);
+        }
+        svg {
+            display: block;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            width: 100%;
+            height: auto;
+            max-width: 280px;
+        }
+        .wrap {
+            display: flex;
+            gap: 10px;
+        }
+        /* Варианты ответов */
+        .options-grid {
+            width: 40%;
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .option-btn {
+            background: white;
+            border: 2px solid #F0F7FC;
+            border-radius: 60px;
+            padding: 14px 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c5a7a;
+            box-shadow: 0 4px 4px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.1s ease;
+            text-align: center;
+            touch-action: manipulation;
+            font-family: inherit;
+        }
+        .option-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .option-btn.correct-highlight {
+            background: #4be764;
+            color: white;
+            border-color: #4be764;
+        }
+        .option-btn.incorrect-highlight {
+            background: #ff4444;
+            color: white;
+            border-color: #ff4444;
+        }
+        .option-btn:disabled {
+            opacity: 0.8;
+            transform: translateY(2px);
+            cursor: not-allowed;
+        }
+
+        /* Блок подсказки */
+        .hint-block {
+            background: #F8FCFE;
+            border-radius: 32px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-left: 8px solid #9fc5e8;
+            line-height: 1.5;
+            color: #2c5a7a;
+            font-size: 0.95rem;
+        }
+        .hint-block h3 {
+            color: #e2935e;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+        }
+        .hint-block p {
+            margin-bottom: 8px;
+        }
+        .hint-block .example {
+            background: #FFF3e6;
+            padding: 12px;
+            border-radius: 24px;
+            margin: 12px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        /* Панель истории */
+        .history-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #F8FCFE;
+            border-radius: 32px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-right: 4px;
+            max-height: 300px;
+        }
+        .history-item {
+            background: white;
+            border-radius: 24px;
+            padding: 12px 16px;
+            border-left: 6px solid;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .history-item.correct-item {
+            border-left-color: #4be764;
+        }
+        .history-item.incorrect-item {
+            border-left-color: #ff4444;
+        }
+        .history-question {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #2c5a7a;
+            margin-bottom: 6px;
+        }
+        .history-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #5d8aa8;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .history-user {
+            color: #2c5a7a;
+        }
+        .history-correct {
+            color: #4be764;
+            font-weight: 600;
+        }
+        .history-wrong {
+            color: #ff4444;
+        }
+        .close-history {
+            background: #FFE5B4;
+            border: none;
+            border-radius: 60px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #b17a42;
+            cursor: pointer;
+            margin-top: 12px;
+            width: 100%;
+        }
+
+        /* Нижняя панель */
+        .footer-panel {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .stats {
+            display: flex;
+            gap: 16px;
+            background: #F0F7FC;
+            padding: 8px 18px;
+            border-radius: 60px;
+        }
+        .stat {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+        .stat .value {
+            font-weight: 800;
+        }
+        .correct {
+            color: #4be764;
+        }
+        .incorrect {
+            color: #ff4444;
+        }
+        .action-btn {
+            background: #FFE5B4;
+            border: none;
+            border-radius: 60px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #b17a42;
+            cursor: pointer;
+            transition: all 0.1s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            font-family: inherit;
+        }
+        .action-btn:active {
+            transform: translateY(3px);
+        }
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .trainer-card { padding: 18px 16px 22px; }
+            .options-grid { gap: 10px; }
+            .option-btn { padding: 12px 6px; font-size: 1rem; }
+            .stats { padding: 4px 12px; }
+            .stat .value { font-size: 1.2rem; }
+            .title h1 { font-size: 1.5rem; }
+            .action-btn { padding: 8px 16px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="trainer-card">
+    <div class="title">
+        <h1>📐 Ломаные линии</h1>
+        <p>Определи вид ломаной</p>
+    </div>
+    <div class="wrap"><!-- Область с SVG -->
+        <div class="svg-container" id="svgContainer">
+            <svg id="polylineSvg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <!-- сюда будет вставляться ломаная -->
+            </svg>
+        </div>
+
+        <!-- Варианты ответов -->
+        <div id="optionsGrid" class="options-grid"></div>
+    </div>
+    
+
+    
+
+    <!-- Блок подсказки (изначально скрыт) -->
+    <div id="hintBlock" class="hint-block hidden">
+        <h3>📘 Виды ломаных</h3>
+        <p><strong>Простая ломаная</strong> — звенья пересекаются только в вершинах (нет самопересечений).<br>
+        <strong>Непростая ломаная</strong> — имеет хотя бы одно самопересечение (звенья пересекаются не только в вершинах).<br>
+        <strong>Замкнутая ломаная</strong> — начало и конец совпадают.<br>
+        <strong>Незамкнутая</strong> — концы не соединены.</p>
+        <div class="example">
+            🔍 <strong>Как определить?</strong><br>
+            • Посмотри, пересекаются ли звенья в точках, которые не являются вершинами.<br>
+            • Если первая и последняя точки совпадают — ломаная замкнутая.<br>
+            • Если нет пересечений — простая.
+        </div>
+    </div>
+
+    <!-- Панель истории (скрыта) -->
+    <div id="historyPanel" class="history-panel hidden">
+        <div class="history-list" id="historyList"></div>
+        <button id="closeHistoryBtn" class="close-history">✖️ Закрыть</button>
+    </div>
+
+    <div class="footer-panel">
+        <div class="stats">
+            <div class="stat correct">
+                <span>✅:</span>
+                <span class="value" id="correctCount">0</span>
+            </div>
+            <div class="stat incorrect">
+                <span>❌:</span>
+                <span class="value" id="errorCount">0</span>
+            </div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+            <button class="action-btn" id="historyBtn">История</button>
+            <button class="action-btn" id="hintBtn">Подсказка</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function(){
+        // ---------- Определение типов ломаных ----------
+        const TYPES = {
+            SIMPLE_OPEN: { name: "Простая незамкнутая", key: "simple_open", description: "Нет самопересечений, концы не соединены." },
+            SIMPLE_CLOSED: { name: "Простая замкнутая", key: "simple_closed", description: "Нет самопересечений, начало и конец совпадают." },
+            NON_SIMPLE_OPEN: { name: "Непростая незамкнутая", key: "non_simple_open", description: "Имеет пересечения звеньев, концы разомкнуты." },
+            NON_SIMPLE_CLOSED: { name: "Непростая замкнутая", key: "non_simple_closed", description: "Пересекается, начало и конец соединены." }
+        };
+
+        // ---------- Генераторы ломаных (возвращают точки и тип) ----------
+        // Простая незамкнутая (зигзаг без пересечений)
+        function generateSimpleOpen() {
+            // 4 точки, образуют "ступеньку"
+            return [
+                [30, 150],
+                [80, 70],
+                [130, 130],
+                [170, 50]
+            ];
+        }
+        // Простая замкнутая (выпуклый четырёхугольник)
+        function generateSimpleClosed() {
+            return [
+                [40, 40],
+                [160, 40],
+                [160, 160],
+                [40, 160],
+                [40, 40] // замыкание
+            ];
+        }
+        // Непростая незамкнутая (крестообразная линия с пересечением)
+        function generateNonSimpleOpen() {
+            return [
+                [30, 100],
+                [170, 30],
+                [30, 30],
+                [170, 100]
+            ];
+        }
+        // Непростая замкнутая ("бабочка")
+        function generateNonSimpleClosed() {
+            return [
+                [40, 40],
+                [160, 160],
+                [40, 160],
+                [160, 40],
+                [40, 40]
+            ];
+        }
+        // Дополнительные вариации для разнообразия (не меняют тип, но немного сдвигают точки)
+        function varyPoints(points, variation = 12) {
+            return points.map(p => [
+                Math.min(190, Math.max(10, p[0] + (Math.random() - 0.5) * variation)),
+                Math.min(190, Math.max(10, p[1] + (Math.random() - 0.5) * variation))
+            ]);
+        }
+
+        // Генерация случайной ломаной с одним из четырёх типов
+        let currentType = null;
+        let currentPoints = [];
+
+        function getRandomPolyline() {
+            const typesList = [
+                { type: TYPES.SIMPLE_OPEN, generator: generateSimpleOpen, needsClose: false },
+                { type: TYPES.SIMPLE_CLOSED, generator: generateSimpleClosed, needsClose: true },
+                { type: TYPES.NON_SIMPLE_OPEN, generator: generateNonSimpleOpen, needsClose: false },
+                { type: TYPES.NON_SIMPLE_CLOSED, generator: generateNonSimpleClosed, needsClose: true }
+            ];
+            const rand = Math.floor(Math.random() * typesList.length);
+            const item = typesList[rand];
+            let points = item.generator();
+            // Небольшая случайная вариация (чтобы каждый раз выглядело иначе, но тип сохранялся)
+            points = varyPoints(points, 12);
+            // Для замкнутых убедимся, что последняя точка совпадает с первой
+            if (item.needsClose && points.length > 1) {
+                points[points.length - 1] = [...points[0]];
+            } else if (!item.needsClose && points.length > 1) {
+                // Убедимся, что первая и последняя разные
+                while (Math.hypot(points[0][0]-points[points.length-1][0], points[0][1]-points[points.length-1][1]) < 5) {
+                    points[points.length-1][0] += 8;
+                    points[points.length-1][1] += 5;
+                }
+            }
+            return { points, type: item.type };
+        }
+
+        // Преобразование точек в строку для SVG
+        function pointsToSVGString(points) {
+            return points.map(p => `${p[0]},${p[1]}`).join(' ');
+        }
+
+        // Отрисовка SVG
+        function renderSVG(points) {
+            const svg = document.getElementById('polylineSvg');
+            const pointsStr = pointsToSVGString(points);
+            // Определим, замкнута ли визуально (для стиля)
+            let isClosed = false;
+            if (points.length >= 2) {
+                const first = points[0];
+                const last = points[points.length-1];
+                if (Math.hypot(first[0]-last[0], first[1]-last[1]) < 2) isClosed = true;
+            }
+            // Для замкнутой можно добавить лёгкую заливку, но оставим polyline
+            svg.innerHTML = `
+                <rect width="100%" height="100%" fill="white" rx="8"/>
+                <polyline points="${pointsStr}" fill="none" stroke="#2c3e50" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                ${points.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="#e67e22" stroke="#fff" stroke-width="1.2"/>`).join('')}
+            `;
+        }
+
+        // Генерация вариантов ответа (4 штуки, включая правильный)
+        function generateOptions(correctTypeKey) {
+            const allTypes = Object.values(TYPES);
+            const correctType = allTypes.find(t => t.key === correctTypeKey);
+            const otherTypes = allTypes.filter(t => t.key !== correctTypeKey);
+            // Перемешиваем другие типы и берём 3 уникальных
+            const shuffled = [...otherTypes];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            const options = [correctType, ...shuffled.slice(0, 3)];
+            // Перемешиваем порядок
+            for (let i = options.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [options[i], options[j]] = [options[j], options[i]];
+            }
+            return options;
+        }
+
+        // ---------- DOM элементы ----------
+        const optionsGrid = document.getElementById('optionsGrid');
+        const correctCountSpan = document.getElementById('correctCount');
+        const errorCountSpan = document.getElementById('errorCount');
+        const historyBtn = document.getElementById('historyBtn');
+        const hintBtn = document.getElementById('hintBtn');
+        const hintBlock = document.getElementById('hintBlock');
+        const historyPanel = document.getElementById('historyPanel');
+        const historyListDiv = document.getElementById('historyList');
+        const closeHistoryBtn = document.getElementById('closeHistoryBtn');
+
+        // ---------- Состояние ----------
+        let currentQuestion = null;     // { points, type }
+        let currentOptions = [];        // массив объектов типа
+        let answered = false;
+        let correctCount = 0;
+        let errorCount = 0;
+        let timeoutId = null;
+        let history = []; // каждый элемент: { typeName, userAnswerName, isCorrect, correctTypeName }
+
+        // История отображается в виде понятных названий
+        function addToHistory(userAnswerTypeName, isCorrect, correctTypeName) {
+            history.push({
+                typeName: correctTypeName,
+                userAnswerName: userAnswerTypeName,
+                isCorrect: isCorrect,
+                correctTypeName: correctTypeName
+            });
+        }
+
+        function updateStats() {
+            correctCountSpan.textContent = correctCount;
+            errorCountSpan.textContent = errorCount;
+        }
+
+        // Обработка ответа
+        function handleAnswer(selectedTypeObj) {
+            if (answered) return;
+            answered = true;
+            const isCorrect = (selectedTypeObj.key === currentQuestion.type.key);
+            if (isCorrect) {
+                correctCount++;
+            } else {
+                errorCount++;
+            }
+            addToHistory(selectedTypeObj.name, isCorrect, currentQuestion.type.name);
+            updateStats();
+
+            // Подсветка кнопок
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(btn => {
+                btn.disabled = true;
+                const btnTypeKey = btn.dataset.typeKey;
+                if (btnTypeKey === currentQuestion.type.key) {
+                    btn.classList.add('correct-highlight');
+                }
+                if (!isCorrect && btnTypeKey === selectedTypeObj.key) {
+                    btn.classList.add('incorrect-highlight');
+                }
+            });
+            scheduleNextQuestion();
+        }
+
+        function scheduleNextQuestion() {
+            if (timeoutId) clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                loadNewQuestion();
+            }, 1200);
+        }
+
+        function loadNewQuestion() {
+            if (timeoutId) clearTimeout(timeoutId);
+            timeoutId = null;
+            const { points, type } = getRandomPolyline();
+            currentQuestion = { points, type };
+            currentOptions = generateOptions(type.key);
+            renderSVG(points);
+            renderOptions();
+            answered = false;
+        }
+
+        function renderOptions() {
+            optionsGrid.innerHTML = '';
+            currentOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt.name;
+                btn.dataset.typeKey = opt.key;
+                btn.addEventListener('click', () => handleAnswer(opt));
+                optionsGrid.appendChild(btn);
+            });
+        }
+
+        // История
+        function showHistory() {
+            // Скрываем тренажёр и подсказку, показываем историю
+            document.querySelector('.svg-container').style.display = 'none';
+            optionsGrid.style.display = 'none';
+            hintBlock.classList.add('hidden');
+            historyPanel.classList.remove('hidden');
+            renderHistory();
+        }
+
+        function hideHistory() {
+            historyPanel.classList.add('hidden');
+            document.querySelector('.svg-container').style.display = 'block';
+            optionsGrid.style.display = 'grid';
+            // Если подсказка была открыта — оставляем как есть, но при скрытии истории не трогаем
+        }
+
+        function renderHistory() {
+            historyListDiv.innerHTML = '';
+            if (history.length === 0) {
+                historyListDiv.innerHTML = '<div style="text-align:center; padding:20px;">Пока нет записей. Решай примеры!</div>';
+                return;
+            }
+            [...history].reverse().forEach(entry => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `history-item ${entry.isCorrect ? 'correct-item' : 'incorrect-item'}`;
+                itemDiv.innerHTML = `
+                    <div class="history-question">${entry.typeName}</div>
+                    <div class="history-details">
+                        <span>Твой ответ: <strong class="history-user">${entry.userAnswerName}</strong></span>
+                        <span>✔️ Правильно: <strong class="history-correct">${entry.correctTypeName}</strong></span>
+                        <span>${entry.isCorrect ? '✅' : '❌'}</span>
+                    </div>
+                `;
+                historyListDiv.appendChild(itemDiv);
+            });
+        }
+
+        // Подсказка: показать/скрыть
+        let hintVisible = false;
+
+        function toggleHint() {
+            const svgContainer = document.querySelector('.svg-container');
+            const optionsGridElem = document.getElementById('optionsGrid');
+
+            if (hintVisible) {
+                // Закрываем подсказку
+                hintBlock.classList.add('hidden');
+                hintBtn.textContent = 'Подсказка';
+                // Возвращаем видимость основного контента
+                svgContainer.style.display = 'block';
+                optionsGridElem.style.display = 'grid';
+                hintVisible = false;
+            } else {
+                // Открываем подсказку
+                hintBlock.classList.remove('hidden');
+                hintBtn.textContent = 'Скрыть подсказку';
+                // Скрываем область с линией и вариантами ответов
+                svgContainer.style.display = 'none';
+                optionsGridElem.style.display = 'none';
+                // Если история открыта — закрываем её
+                if (!historyPanel.classList.contains('hidden')) {
+                    hideHistory();
+                }
+                hintVisible = true;
+            }
+        }
+
+        // Обработчики кнопок
+        historyBtn.addEventListener('click', () => {
+            if (historyPanel.classList.contains('hidden')) {
+                // Закрываем подсказку, если она открыта
+                if (hintVisible) toggleHint();
+                showHistory();
+            } else {
+                hideHistory();
+            }
+        });
+
+        closeHistoryBtn.addEventListener('click', () => {
+            hideHistory();
+        });
+
+        hintBtn.addEventListener('click', toggleHint);
+
+        // Старт
+        loadNewQuestion();
+    })();
+</script>
+</body>
+</html>
